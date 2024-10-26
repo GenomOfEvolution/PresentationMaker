@@ -1,13 +1,13 @@
-import { createCollection, SlideCollection } from "./SlideCollection";
+import { SlideType } from "./Slide";
 
 export type Presentation = {
   name: string;
-  slideCollection: SlideCollection;
+  slideCollection: SlideType[];
 };
 
 const createPresentation = (): Presentation => ({
   name: "New presentation",
-  slideCollection: createCollection(),
+  slideCollection: [],
 });
 
 const editName = (newName: string, presentation: Presentation): Presentation => {

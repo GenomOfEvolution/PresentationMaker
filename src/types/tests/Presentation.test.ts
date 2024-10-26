@@ -1,10 +1,9 @@
 import { createPresentation, editName, Presentation } from "../Presentation";
-import { createCollection } from "../SlideCollection";
 
 describe("Presentation", () => {
   describe("Create presentation", () => {
     it("creates presentation", () => {
-      expect(createPresentation()).toEqual({ name: "New presentation", slideCollection: createCollection() });
+      expect(createPresentation()).toEqual({ name: "New presentation", slideCollection: [] });
     });
   });
 
@@ -13,7 +12,7 @@ describe("Presentation", () => {
     it("renames presentation", () => {
       expect(editName("Cool presentation", pres)).toEqual({
         name: "Cool presentation",
-        slideCollection: createCollection(),
+        slideCollection: [],
       });
     });
 

@@ -1,5 +1,3 @@
-import { Slide, SlideElement } from "./Slide";
-
-export type Selection = {
-  selectedObjects: Slide[] | SlideElement[];
+export type SelectionType = {
+  selectedElementId: string | null;
 };

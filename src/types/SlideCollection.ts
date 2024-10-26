@@ -1,37 +1,33 @@
 import { Id } from "./BaseTypes";
+import { Presentation } from "./Presentation";
 import { Slide } from "./Slide";
 
-export type SlideCollection = {
-  slides: Slide[];
-};
-
-const createCollection = (): SlideCollection => ({
-  slides: [],
+const addSlide = (presentation: Presentation, newSlide: Slide): Presentation => ({
+  ...presentation,
+  slideCollection: [...presentation.slideCollection, newSlide],
 });
 
-const addSlide = (collection: SlideCollection, newSlide: Slide): SlideCollection => ({
-  slides: [...collection.slides, newSlide],
-});
-
-const removeSlides = (SlidesToRemoveId: Id[], collection: SlideCollection): SlideCollection => {
-  const filteredSlides = collection.slides.filter((slide) => !SlidesToRemoveId.includes(slide.id));
+const removeSlides = (SlidesToRemoveId: Id[], presentation: Presentation): Presentation => {
+  const filteredSlides = presentation.slideCollection.filter((slide) => !SlidesToRemoveId.includes(slide.id));
   return {
-    slides: filteredSlides,
+    ...presentation,
+    slideCollection: filteredSlides,
   };
 };
 
-const moveSlides = (SlidesToMoveId: Id[], collection: SlideCollection, posToMove: number): SlideCollection => {
+const moveSlides = (SlidesToMoveId: Id[], presentation: Presentation, posToMove: number): Presentation => {
   if (posToMove < 0) {
-    return collection;
+    return presentation;
   }
 
-  const slidesToMove = collection.slides.filter((slide) => SlidesToMoveId.includes(slide.id));
-  const remainingSlides = collection.slides.filter((slide) => !SlidesToMoveId.includes(slide.id));
+  const slidesToMove = presentation.slideCollection.filter((slide) => SlidesToMoveId.includes(slide.id));
+  const remainingSlides = presentation.slideCollection.filter((slide) => !SlidesToMoveId.includes(slide.id));
   const newSlides = [...remainingSlides.slice(0, posToMove), ...slidesToMove, ...remainingSlides.slice(posToMove)];
 
   return {
-    slides: newSlides,
+    ...presentation,
+    slideCollection: newSlides,
   };
 };
 
-export { createCollection, addSlide, removeSlides, moveSlides };
+export { addSlide, removeSlides, moveSlides };
