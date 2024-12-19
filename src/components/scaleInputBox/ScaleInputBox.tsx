@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./ScaleInputBox.module.css";
 
 export type ScaleInputBoxProps = {

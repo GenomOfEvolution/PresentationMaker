@@ -3,7 +3,7 @@
   flex-wrap: nowrap;
   flex-direction: column;
   overflow-y: auto;
-  min-width: fit-content;
+  min-width: 150px;
 }
 
 .item__wrapper {
@@ -14,10 +14,12 @@
 .item {
   margin: 10px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .item:hover {
-  border: 3px solid #e2e7ea;
+  box-shadow: 0 0 0 3px #e2e7ea;
+  cursor: pointer;
 }
 
 .item__number {

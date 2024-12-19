@@ -1,27 +1,24 @@
 import styles from "./App.module.css";
-import { Presentation } from "./types/Presentation";
 import { SlidesList } from "./view/slidesList/SlidesList";
 import { TopPanel } from "./view/topPanel/TopPanel";
 import { Workspace } from "./view/workspace/Workspace";
-import { SelectionType } from "./types/Selection";
-import React from "react";
+import { EditorType } from "./store/editorType";
 
 type AppProps = {
-  presentation: Presentation;
-  selection: SelectionType;
+  editor: EditorType;
 };
 
-const App = ({ presentation, selection }: AppProps) => {
-  selection.selectedElementId = presentation.slideCollection[0].id;
+const App = ({ editor }: AppProps) => {
+  const activeSlideIndex = editor.presentation.slideCollection.filter((slide) => {
+    if (slide.id === editor.selection.selectedSlideId) return slide;
+  });
+
   return (
     <>
-      <TopPanel title={presentation.name}></TopPanel>
+      <TopPanel title={editor.presentation.name} selection={editor.selection}></TopPanel>
       <div className={styles.container}>
-        <SlidesList
-          slides={presentation.slideCollection}
-          selection={selection}
-        ></SlidesList>
-        <Workspace slide={presentation.slideCollection[0]}></Workspace>
+        <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection}></SlidesList>
+        <Workspace slide={activeSlideIndex[0]}></Workspace>
       </div>
     </>
   );

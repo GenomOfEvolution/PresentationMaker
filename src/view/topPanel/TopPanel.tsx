@@ -3,15 +3,20 @@ import { ImageButton } from "../../components/imageButton/ImageButton";
 import { Separator } from "../../components/separator/separator";
 import { DropDownButton } from "../../components/dropDownButton/DropDownButton";
 import { EditColorButton } from "../../components/editColorButton/EditColorButton";
-import { GradientType, LinearGradient } from "../../types/BaseTypes";
+import { createImageObject, createTextObject, GradientType, LinearGradient } from "../../types/BaseTypes";
 import { ScaleInputBox } from "../../components/scaleInputBox/ScaleInputBox";
-// import { dispatch } from "../../store/editor.ts";
-// import { removeSlide } from "../../store/removeSlide.ts";
-// import { renamePresentationTitle } from "../../store/renamePresentationTitle.ts";
-// import * as React from "react";
+import { dispatch } from "../../store/editor";
+import { addNewSlide } from "../../store/functions/addSlide";
+import { removeSlide } from "../../store/functions/removeSlide";
+import { SelectionType } from "../../types/Selection";
+import { addSlideElem } from "../../store/functions/addSlideElement";
+import { TextButton } from "../../components/textButton/TextButton";
+import { editBackground } from "../../store/functions/editBackground";
+import { renamePresentation } from "../../store/functions/renamePresentation";
 
 type TopPanelProps = {
   title: string;
+  selection: SelectionType;
 };
 
 const TextEditPanel = () => {
@@ -125,28 +130,58 @@ const TextEditPanel = () => {
   );
 };
 
-const TopPanel = ({ title }: TopPanelProps) => {
-  /*function onAddSlide() {}
-  function onRemoveSlide() {
-    dispatch(removeSlide);
-  }
+const TopPanel = ({ title, selection }: TopPanelProps) => {
   const onTitleChange: React.ChangeEventHandler = (event) => {
-    dispatch(renamePresentationTitle, (event.target as HTMLInputElement).value);
-  };*/
+    dispatch(renamePresentation, (event.target as HTMLInputElement).value);
+  };
+
   return (
     <div className={styles.topPanel}>
-      <input className={styles.title} type="text" defaultValue={title} />
-
+      <input className={styles.title} type="text" defaultValue={title} onChange={onTitleChange} />
       <div className={styles.toolbar}>
         <div className={styles.toolbar__main}>
-          <ImageButton onClick={() => console.log("adding slide")} imageName="add" />
+          <ImageButton onClick={() => dispatch(removeSlide, [selection.selectedSlideId])} imageName="delete" />
+          <ImageButton onClick={() => dispatch(addNewSlide)} imageName="add" />
           <Separator />
           <ImageButton onClick={() => console.log("undo")} imageName="undo" />
           <ImageButton onClick={() => console.log("redo")} imageName="redo" />
           <Separator />
-          <ImageButton onClick={() => console.log("adding text")} imageName="text_fields" />
-          <ImageButton onClick={() => console.log("adding image")} imageName="image" />
+          <ImageButton
+            onClick={() =>
+              dispatch(addSlideElem, createTextObject({ x: 50, y: 50 }, { width: 100, height: 50 }, "New text"))
+            }
+            imageName="text_fields"
+          />
+          <ImageButton
+            onClick={() =>
+              dispatch(
+                addSlideElem,
+                createImageObject(
+                  { x: 50, y: 50 },
+                  { width: 100, height: 50 },
+                  "https://dota2.ru/img/heroes/pudge/portrait.jpg",
+                  "URL",
+                ),
+              )
+            }
+            imageName="image"
+          />
           <TextEditPanel />
+          <Separator />
+          <TextButton
+            onClick={() =>
+              dispatch(
+                editBackground,
+                createImageObject(
+                  { x: 50, y: 50 },
+                  { width: 100, height: 50 },
+                  "https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3ea5489be478613512121_43.png",
+                  "URL",
+                ),
+              )
+            }
+            text="Фон"
+          />
         </div>
         <ImageButton onClick={() => console.log("folding top panel")} imageName="keyboard_arrow_up" />
       </div>

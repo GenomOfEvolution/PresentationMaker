@@ -28,14 +28,18 @@ export type BackgroundColor = {
   color: Color | Gradient;
 };
 
+export const createBgColor = (color: Color | Gradient): BackgroundColor => {
+  return { type: BackgroundType.Color, color: color };
+};
+
+export const createBgImage = (img: Image): BackgroundImg => {
+  return { type: BackgroundType.Image, url: img.url };
+};
+
 export type SlideBackground = BackgroundImg | BackgroundColor;
 export type SlideElement = Text | Image;
 
-const createSlideElement = (
-  pos: Point,
-  size: Size,
-  elemType: ObjectType
-): SlideElement => {
+const createSlideElement = (pos: Point, size: Size, elemType: ObjectType): SlideElement => {
   const baseElem: SlideObject = createSlideObject(pos, size);
 
   switch (elemType) {
@@ -72,10 +76,7 @@ const createSlide = (): SlideType => ({
   bg: { type: BackgroundType.Color, color: "#ffffff" },
 });
 
-const editBackground = (
-  slide: SlideType,
-  newBg: SlideBackground
-): SlideType => ({
+const editBackground = (slide: SlideType, newBg: SlideBackground): SlideType => ({
   ...slide,
   bg: newBg,
 });
@@ -103,10 +104,7 @@ const editTextFontSize = (textElem: Text, newFontSize: number): Text => {
   return { ...textElem, fontSize: newFontSize };
 };
 
-const editElementPosition = (
-  newPos: Point,
-  elem: SlideElement
-): SlideElement => ({
+const editElementPosition = (newPos: Point, elem: SlideElement): SlideElement => ({
   ...elem,
   pos: newPos,
 });
@@ -121,19 +119,14 @@ const getElemIndexById = (slide: SlideType, elemId: Id): number => {
 };
 
 const removeElementsById = (slide: SlideType, ids: Id[]): SlideType => {
-  const filteredElements = slide.elements.filter(
-    (slide) => !ids.includes(slide.id)
-  );
+  const filteredElements = slide.elements.filter((slide) => !ids.includes(slide.id));
   return {
     ...slide,
     elements: filteredElements,
   };
 };
 
-const moveElementsDown = (
-  elementsToMoveId: Id[],
-  slide: SlideType
-): SlideType => {
+const moveElementsDown = (elementsToMoveId: Id[], slide: SlideType): SlideType => {
   let elementsCopy = [...slide.elements];
   elementsToMoveId
     .slice()
@@ -141,59 +134,36 @@ const moveElementsDown = (
     .forEach((id) => {
       const index = elementsCopy.findIndex((element) => element.id === id);
       if (index !== -1 && index < elementsCopy.length - 1) {
-        [elementsCopy[index], elementsCopy[index + 1]] = [
-          elementsCopy[index + 1],
-          elementsCopy[index],
-        ];
+        [elementsCopy[index], elementsCopy[index + 1]] = [elementsCopy[index + 1], elementsCopy[index]];
       }
     });
   return { ...slide, elements: elementsCopy };
 };
 
-const moveElementsUp = (
-  elementsToMoveId: Id[],
-  slide: SlideType
-): SlideType => {
+const moveElementsUp = (elementsToMoveId: Id[], slide: SlideType): SlideType => {
   let elementsCopy = [...slide.elements];
   elementsToMoveId.forEach((id) => {
     const index = elementsCopy.findIndex((element) => element.id === id);
     if (index > 0) {
-      [elementsCopy[index], elementsCopy[index - 1]] = [
-        elementsCopy[index - 1],
-        elementsCopy[index],
-      ];
+      [elementsCopy[index], elementsCopy[index - 1]] = [elementsCopy[index - 1], elementsCopy[index]];
     }
   });
 
   return { ...slide, elements: elementsCopy };
 };
 
-const moveElementsToTop = (
-  elementsToMoveId: Id[],
-  slide: SlideType
-): SlideType => {
-  const elementsToMove = slide.elements.filter((element) =>
-    elementsToMoveId.includes(element.id)
-  );
-  const remainingElements = slide.elements.filter(
-    (element) => !elementsToMoveId.includes(element.id)
-  );
+const moveElementsToTop = (elementsToMoveId: Id[], slide: SlideType): SlideType => {
+  const elementsToMove = slide.elements.filter((element) => elementsToMoveId.includes(element.id));
+  const remainingElements = slide.elements.filter((element) => !elementsToMoveId.includes(element.id));
   return {
     ...slide,
     elements: [...elementsToMove, ...remainingElements],
   };
 };
 
-const moveElementsToBottom = (
-  elementsToMoveId: Id[],
-  slide: SlideType
-): SlideType => {
-  const elementsToMove = slide.elements.filter((element) =>
-    elementsToMoveId.includes(element.id)
-  );
-  const remainingElements = slide.elements.filter(
-    (element) => !elementsToMoveId.includes(element.id)
-  );
+const moveElementsToBottom = (elementsToMoveId: Id[], slide: SlideType): SlideType => {
+  const elementsToMove = slide.elements.filter((element) => elementsToMoveId.includes(element.id));
+  const remainingElements = slide.elements.filter((element) => !elementsToMoveId.includes(element.id));
   return {
     ...slide,
     elements: [...remainingElements, ...elementsToMove],

@@ -1,9 +1,9 @@
 import { SlideType } from "../../types/Slide.ts";
 import { Slide } from "../slide/Slide.tsx";
-import styles from "./SlidesList.module.css";
 import { SelectionType } from "../../types/Selection.ts";
-// import { dispatch } from "../store/editor.ts";
-// import { setSelection } from "../store/setSelection.ts";
+import styles from "./SlidesList.module.css";
+import { dispatch } from "../../store/editor.ts";
+import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
 
 const SLIDE_PREVIEW_SCALE = 0.2;
 
@@ -13,22 +13,23 @@ type SlidesListPros = {
 };
 
 const SlidesList = ({ slides, selection }: SlidesListPros) => {
-  /*function onSlideClick(slideId: string) {
-    dispatch(setSelection, {
+  const onSlideClick = (slideId: String) => {
+    dispatch(setSelectionSlide, {
       selectedSlideId: slideId,
     });
-  }*/
+  };
+
   return (
     <div className={styles.slideList}>
       {slides.map((slide, index) => (
-        <div key={slide.id} className={styles.item__wrapper}>
+        <div key={slide.id} className={styles.item__wrapper} onClick={() => onSlideClick(slide.id)}>
           <span className={styles.item__number}>{index + 1}</span>
           <Slide
             slide={slide}
             scale={SLIDE_PREVIEW_SCALE}
-            isSelected={slide.id === selection.selectedElementId}
+            isSelected={slide.id === selection.selectedSlideId}
             className={styles.item}
-          ></Slide>
+          />
         </div>
       ))}
     </div>

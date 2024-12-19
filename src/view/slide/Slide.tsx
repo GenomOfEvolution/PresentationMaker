@@ -39,7 +39,7 @@ const Slide = ({ slide, scale = 1, isSelected, className }: SlideProps) => {
   }
 
   if (isSelected) {
-    slideStyles.border = "3px solid #0b57d0";
+    slideStyles.boxShadow = "0 0 0 3px #0b57d0";
   }
 
   return (

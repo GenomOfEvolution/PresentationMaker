@@ -1,0 +1,24 @@
+.textButton {
+  display: flex;
+
+  height: 28px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444746;
+  border-radius: 4px;
+
+  padding: 0 8px;
+
+  color: rgba(0, 0, 0, 0.7);
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.textButton:hover {
+  background-color: #e2e7ea;
+}
