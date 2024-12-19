@@ -1,0 +1,19 @@
+.scaleInputBox {
+  max-width: 32px;
+  max-height: 24px;
+
+  border-radius: 4px;
+  border: 2px solid black;
+
+  font-family: "Roboto", sans-serif;
+  color: black;
+  font-weight: 500;
+  font-size: 15px;
+
+  text-align: center;
+  background-color: transparent;
+}
+
+.scaleInputBox:hover {
+  background-color: #e2e7ea;
+}

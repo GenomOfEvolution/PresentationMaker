@@ -1,0 +1,32 @@
+.slideList {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  overflow-y: auto;
+  min-width: fit-content;
+}
+
+.item__wrapper {
+  display: flex;
+  max-height: fit-content;
+}
+
+.item {
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.item:hover {
+  border: 3px solid #e2e7ea;
+}
+
+.item__number {
+  display: flex;
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
+  color: black;
+  font-weight: 500;
+
+  padding-top: 15px;
+  margin-left: 25px;
+}

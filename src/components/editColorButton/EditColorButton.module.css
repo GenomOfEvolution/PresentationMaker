@@ -1,0 +1,26 @@
+.editColorButton {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  height: 32px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+
+  color: #444746;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.editColorButton:hover {
+  background-color: #e2e7ea;
+}
+
+.editColorButton__underline {
+  display: flex;
+  width: 22px;
+  height: 4px;
+}

@@ -1,0 +1,10 @@
+.Separator {
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 1px;
+  background-color: "#c4c7c5";
+  height: 24px;
+
+  border-left: 1px solid #dadce0;
+  display: flex;
+}

@@ -1,0 +1,17 @@
+.ImageButton {
+  display: flex;
+
+  height: 28px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444746;
+  border-radius: 4px;
+}
+
+.ImageButton:hover {
+  background-color: #e2e7ea;
+}
