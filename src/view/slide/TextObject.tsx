@@ -1,3 +1,4 @@
+import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 import { Text } from "../../types/BaseTypes";
 import { CSSProperties } from "react";
 
@@ -20,9 +21,18 @@ const TextObject = ({ textObject, scale = 1 }: TextObjectProps) => {
 
   const textObjectBoxProperties: CSSProperties = {};
 
+  const { setCurrentElement } = useAppContext();
+
   return (
     <>
-      <p style={textObjectStyles}>{textObject.content}</p>
+      <p
+        style={textObjectStyles}
+        onClick={() => {
+          setCurrentElement(textObject);
+        }}
+      >
+        {textObject.content}
+      </p>
     </>
   );
 };

@@ -4,6 +4,7 @@ import { SelectionType } from "../../types/Selection.ts";
 import styles from "./SlidesList.module.css";
 import { dispatch } from "../../store/editor.ts";
 import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
+import { useAppContext } from "../../contexts/appContext/AppContextProvider.tsx";
 
 const SLIDE_PREVIEW_SCALE = 0.2;
 
@@ -33,6 +34,10 @@ const SlidesList = ({ slides, selection }: SlidesListPros) => {
         minIndex = 0;
       }
 
+      if (maxIndex >= slides.length) {
+        maxIndex = slides.length - 1;
+      }
+
       if (curSel.selectedSlidesId!.length > 1 && fromIndex > toIndex) {
         maxIndex = slides.findIndex((slide) => slide.id === curSel.selectedSlidesId![0]);
       }
@@ -48,17 +53,21 @@ const SlidesList = ({ slides, selection }: SlidesListPros) => {
     }
     dispatch(setSelectionSlide, curSel);
   };
-
+  const { setCurrentElement } = useAppContext();
   return (
     <div className={styles.slideList}>
       {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={styles.item__wrapper}
-          onClick={(event) => onSlideClick(slide.id, selection, event)}
+          onClick={(event) => {
+            onSlideClick(slide.id, selection, event);
+            setCurrentElement(null);
+          }}
         >
           <span className={styles.item__number}>{index + 1}</span>
           <Slide
+            containerRef={null}
             slide={slide}
             scale={SLIDE_PREVIEW_SCALE}
             isSelected={(selection.selectedSlidesId as string[]).includes(slide.id)}

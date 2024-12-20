@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./ImageButton.module.css";
 
 export type ImageButtonProps = {

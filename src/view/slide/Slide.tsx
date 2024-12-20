@@ -14,9 +14,10 @@ type SlideProps = {
   scale?: number;
   isSelected: boolean;
   className: string;
+  containerRef: any;
 };
 
-const Slide = ({ slide, scale = 1, isSelected, className }: SlideProps) => {
+const Slide = ({ containerRef, slide, scale = 1, isSelected, className }: SlideProps) => {
   const slideStyles: CSSProperties = {
     width: `${SLIDE_WIDTH * scale}px`,
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
@@ -50,7 +51,14 @@ const Slide = ({ slide, scale = 1, isSelected, className }: SlideProps) => {
             case ObjectType.Text:
               return <TextObject key={slideObject.id} textObject={slideObject} scale={scale}></TextObject>;
             case ObjectType.Image:
-              return <ImageObject key={slideObject.id} imageObject={slideObject} scale={scale}></ImageObject>;
+              return (
+                <ImageObject
+                  containerRef={containerRef}
+                  key={slideObject.id}
+                  imageObject={slideObject}
+                  scale={scale}
+                ></ImageObject>
+              );
             default:
               throw new Error(`Unknown slide type`);
           }
