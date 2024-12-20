@@ -1,9 +1,9 @@
 export type SelectionType = {
-  selectedSlideId: string | null;
+  selectedSlidesId: string[] | null;
 };
 
 const createSelection = (): SelectionType => {
-  return { selectedSlideId: null };
+  return { selectedSlidesId: null };
 };
 
 export { createSelection };

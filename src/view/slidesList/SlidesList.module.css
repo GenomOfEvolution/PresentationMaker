@@ -9,6 +9,8 @@
 .item__wrapper {
   display: flex;
   max-height: fit-content;
+
+  user-select: none;
 }
 
 .item {

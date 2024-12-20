@@ -10,6 +10,8 @@
   justify-content: center;
   color: #444746;
   border-radius: 4px;
+
+  user-select: none;
 }
 
 .ImageButton:hover {

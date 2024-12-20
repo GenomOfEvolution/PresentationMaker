@@ -4,4 +4,5 @@ import { SelectionType } from "../types/Selection.ts";
 export type EditorType = {
   presentation: Presentation;
   selection: SelectionType;
+  workingWith: "slideList" | "workspace";
 };

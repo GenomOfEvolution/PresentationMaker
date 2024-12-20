@@ -1,21 +1,32 @@
 import { SelectionType } from "../../types/Selection";
 import { createSlide, SlideType } from "../../types/Slide";
-import { addSlide } from "../../types/SlideCollection";
+import { addSlide, moveSlides } from "../../types/SlideCollection";
 import { EditorType } from "../editorType";
 
 const addNewSlide = (editor: EditorType): EditorType => {
   const newSlide: SlideType = createSlide();
   let curSelection: SelectionType = editor.selection;
 
-  if (editor.presentation.slideCollection.length === 0) {
-    curSelection.selectedSlideId = newSlide.id;
-  }
+  const indexToInsert: number =
+    1 +
+    editor.presentation.slideCollection.findIndex(
+      (slide) => slide.id === curSelection.selectedSlidesId![curSelection.selectedSlidesId!.length - 1],
+    );
 
-  return {
-    ...editor,
-    selection: curSelection,
-    presentation: addSlide(editor.presentation, newSlide),
-  };
+  if (editor.presentation.slideCollection.length === 0) {
+    curSelection.selectedSlidesId = [newSlide.id];
+    return {
+      ...editor,
+      selection: curSelection,
+      presentation: addSlide(editor.presentation, newSlide),
+    };
+  } else {
+    return {
+      ...editor,
+      selection: curSelection,
+      presentation: moveSlides([newSlide.id], addSlide(editor.presentation, newSlide), indexToInsert),
+    };
+  }
 };
 
 export { addNewSlide };

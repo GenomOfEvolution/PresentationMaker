@@ -9,16 +9,16 @@ type AppProps = {
 };
 
 const App = ({ editor }: AppProps) => {
-  const activeSlideIndex = editor.presentation.slideCollection.filter((slide) => {
-    if (slide.id === editor.selection.selectedSlideId) return slide;
-  });
+  const activeSlide = editor.presentation.slideCollection.find((slide) =>
+    editor.selection.selectedSlidesId!.includes(slide.id),
+  );
 
   return (
     <>
       <TopPanel title={editor.presentation.name} selection={editor.selection}></TopPanel>
       <div className={styles.container}>
         <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection}></SlidesList>
-        <Workspace slide={activeSlideIndex[0]}></Workspace>
+        <Workspace slide={activeSlide!}></Workspace>
       </div>
     </>
   );

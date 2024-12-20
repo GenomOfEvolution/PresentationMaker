@@ -140,7 +140,10 @@ const TopPanel = ({ title, selection }: TopPanelProps) => {
       <input className={styles.title} type="text" defaultValue={title} onChange={onTitleChange} />
       <div className={styles.toolbar}>
         <div className={styles.toolbar__main}>
-          <ImageButton onClick={() => dispatch(removeSlide, [selection.selectedSlideId])} imageName="delete" />
+          <ImageButton
+            onClick={() => dispatch(removeSlide, selection.selectedSlidesId as string[])}
+            imageName="delete"
+          />
           <ImageButton onClick={() => dispatch(addNewSlide)} imageName="add" />
           <Separator />
           <ImageButton onClick={() => console.log("undo")} imageName="undo" />

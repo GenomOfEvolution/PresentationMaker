@@ -39,9 +39,9 @@ const removeSlide = (editor: EditorType, slidesToRemove: string[] | SlideType[])
   // Слайдов нет в презентации
   if (firstToDeleteIndex === -1) {
     firstToDeleteIndex = 0;
-    newSel.selectedSlideId = null;
+    newSel.selectedSlidesId = null;
   } else {
-    newSel.selectedSlideId = newPres.slideCollection[firstToDeleteIndex].id;
+    newSel.selectedSlidesId![0] = newPres.slideCollection[firstToDeleteIndex].id;
   }
 
   return {

@@ -51,11 +51,12 @@ for (let i = 0; i < 5; i++) {
   presentation = addSlide(presentation, tempSlide);
 }
 
-selection.selectedSlideId = presentation.slideCollection[0].id;
+selection.selectedSlidesId = [presentation.slideCollection[0].id];
 
 const editor: EditorType = {
   presentation,
   selection: selection,
+  workingWith: "workspace",
 };
 
 export { editor };
