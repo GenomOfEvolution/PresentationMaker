@@ -38,14 +38,12 @@ const useDragAndDrop = (
           y: initialPos.current.y + deltaY,
         };
 
-        // Ограничение по X
         if (newPos.x < 0) {
           newPos.x = 0;
         } else if (newPos.x > parentRect.width - childRect.width) {
           newPos.x = parentRect.width - childRect.width;
         }
 
-        // Ограничение по Y
         if (newPos.y < 0) {
           newPos.y = 0;
         } else if (newPos.y > parentRect.height - childRect.height) {
@@ -65,10 +63,16 @@ const useDragAndDrop = (
       document.addEventListener("mouseup", handleMouseUp);
     };
 
-    childRef.current?.addEventListener("mousedown", handleMouseDown);
+    const handleMouseDownWithCheck = (e: MouseEvent) => {
+      if (parentRef.current) {
+        handleMouseDown(e);
+      }
+    };
+
+    childRef.current?.addEventListener("mousedown", handleMouseDownWithCheck);
 
     return () => {
-      childRef.current?.removeEventListener("mousedown", handleMouseDown);
+      childRef.current?.removeEventListener("mousedown", handleMouseDownWithCheck);
     };
   }, [childRef, parentRef, setPosition]);
 };

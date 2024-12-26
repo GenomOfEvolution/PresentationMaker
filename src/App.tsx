@@ -16,11 +16,11 @@ const App = ({ editor }: AppProps) => {
 
   return (
     <>
-      <AppContextProvider value={"test"}>
-        <TopPanel title={editor.presentation.name} selection={editor.selection}></TopPanel>
+      <AppContextProvider>
+        <TopPanel title={editor.presentation.name} selection={editor.selection} />
         <div className={styles.container}>
-          <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection}></SlidesList>
-          <Workspace slide={activeSlide!}></Workspace>
+          <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
+          <Workspace slide={activeSlide!} />
         </div>
       </AppContextProvider>
     </>

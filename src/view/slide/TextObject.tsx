@@ -22,7 +22,6 @@ const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
     fontSize: `${textObject.fontSize * scale}px`,
     fontFamily: `${textObject.fontName}`,
     color: `${textObject.fontColor}`,
-    cursor: "grab",
   };
 
   useDragAndDrop(ref, parentRef, setPosition);
@@ -30,15 +29,15 @@ const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
   const { setCurrentElement } = useAppContext();
 
   return (
-    <p
+    <div
       ref={ref}
       style={textObjectStyles}
       onClick={() => {
         setCurrentElement(textObject);
       }}
     >
-      {textObject.content}
-    </p>
+      <span style={{ display: "block", width: textObject.size.width * scale }}>{textObject.content}</span>
+    </div>
   );
 };
 

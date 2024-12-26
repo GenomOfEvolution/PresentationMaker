@@ -2,7 +2,7 @@ import { editor } from "./data.ts";
 import { EditorType } from "./editorType.ts";
 
 let _editor = editor;
-let _handler = null;
+let _handler: Function | null = null;
 
 function getEditor() {
   return _editor;

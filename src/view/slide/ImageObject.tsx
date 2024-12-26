@@ -1,6 +1,7 @@
 import React, { useRef, useState, CSSProperties } from "react";
 import useDragAndDrop from "../../hooks/useDragAndDrop";
 import { Image } from "../../types/BaseTypes";
+import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 
 type ImageObjectProps = {
   imageObject: Image;
@@ -18,7 +19,6 @@ const ImageObject = ({ imageObject, scale = 1, parentRef }: ImageObjectProps) =>
     left: `${pos.x * scale}px`,
     width: `${imageObject.size.width * scale}px`,
     height: `${imageObject.size.height * scale}px`,
-    cursor: "grab",
     boxSizing: "border-box",
     overflow: "hidden",
     display: "flex",
@@ -27,10 +27,17 @@ const ImageObject = ({ imageObject, scale = 1, parentRef }: ImageObjectProps) =>
   };
 
   useDragAndDrop(ref, parentRef, setPosition);
+  const { setCurrentElement } = useAppContext();
 
   return (
-    <div ref={ref} style={imageObjectStyles}>
-      <img style={{ width: "100%", height: "100%" }} src={imageObject.url} alt={imageObject.alt || "Image"} />
+    <div
+      ref={ref}
+      style={imageObjectStyles}
+      onClick={() => {
+        setCurrentElement(imageObject);
+      }}
+    >
+      <img style={{ width: "100%", height: "100%" }} src={imageObject.url} />
     </div>
   );
 };

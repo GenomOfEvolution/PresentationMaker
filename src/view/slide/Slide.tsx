@@ -12,12 +12,11 @@ const SLIDE_WIDTH = 1000;
 type SlideProps = {
   slide: SlideType;
   scale?: number;
-  isSelected: boolean;
   className: string;
   containerRef: any;
 };
 
-const Slide = ({ containerRef, slide, scale = 1, isSelected, className }: SlideProps) => {
+const Slide = ({ containerRef, slide, scale = 1, className }: SlideProps) => {
   const slideStyles: CSSProperties = {
     width: `${SLIDE_WIDTH * scale}px`,
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
@@ -39,32 +38,18 @@ const Slide = ({ containerRef, slide, scale = 1, isSelected, className }: SlideP
       break;
   }
 
-  if (isSelected) {
-    slideStyles.boxShadow = "0 0 0 3px #0b57d0";
-  }
-
   return (
     <>
-      <div style={slideStyles} className={styles.slide + " " + className}>
+      <div style={slideStyles} className={styles.slide + " " + className} id={slide.id}>
         {slide.elements.map((slideObject) => {
           switch (slideObject.objectType) {
             case ObjectType.Text:
               return (
-                <TextObject
-                  parentRef={containerRef}
-                  key={slideObject.id}
-                  textObject={slideObject}
-                  scale={scale}
-                ></TextObject>
+                <TextObject parentRef={containerRef} key={slideObject.id} textObject={slideObject} scale={scale} />
               );
             case ObjectType.Image:
               return (
-                <ImageObject
-                  parentRef={containerRef}
-                  key={slideObject.id}
-                  imageObject={slideObject}
-                  scale={scale}
-                ></ImageObject>
+                <ImageObject parentRef={containerRef} key={slideObject.id} imageObject={slideObject} scale={scale} />
               );
             default:
               throw new Error(`Unknown slide type`);

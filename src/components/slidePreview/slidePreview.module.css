@@ -1,0 +1,7 @@
+.slidePreview {
+  position: relative;
+  border: 1px solid #dadce0;
+  box-sizing: border-box;
+  min-width: 150px;
+  min-height: 85px;
+}
