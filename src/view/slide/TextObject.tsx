@@ -1,39 +1,44 @@
+import React, { useRef, useState, CSSProperties } from "react";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 import { Text } from "../../types/BaseTypes";
-import { CSSProperties } from "react";
+import useDragAndDrop from "../../hooks/useDragAndDrop";
 
 type TextObjectProps = {
   textObject: Text;
   scale?: number;
+  parentRef: React.RefObject<HTMLElement>;
 };
 
-const TextObject = ({ textObject, scale = 1 }: TextObjectProps) => {
+const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [pos, setPosition] = useState(textObject.pos);
+
   const textObjectStyles: CSSProperties = {
     position: "absolute",
-    top: `${textObject.pos.y * scale}px`,
-    left: `${textObject.pos.x * scale}px`,
+    top: `${pos.y * scale}px`,
+    left: `${pos.x * scale}px`,
     width: `${textObject.size.width * scale}px`,
     height: `${textObject.size.height * scale}px`,
     fontSize: `${textObject.fontSize * scale}px`,
     fontFamily: `${textObject.fontName}`,
     color: `${textObject.fontColor}`,
+    cursor: "grab",
   };
 
-  const textObjectBoxProperties: CSSProperties = {};
+  useDragAndDrop(ref, parentRef, setPosition);
 
   const { setCurrentElement } = useAppContext();
 
   return (
-    <>
-      <p
-        style={textObjectStyles}
-        onClick={() => {
-          setCurrentElement(textObject);
-        }}
-      >
-        {textObject.content}
-      </p>
-    </>
+    <p
+      ref={ref}
+      style={textObjectStyles}
+      onClick={() => {
+        setCurrentElement(textObject);
+      }}
+    >
+      {textObject.content}
+    </p>
   );
 };
 

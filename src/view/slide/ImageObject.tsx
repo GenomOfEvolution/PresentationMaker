@@ -1,76 +1,36 @@
-import { useAppContext } from "../../contexts/appContext/AppContextProvider";
+import React, { useRef, useState, CSSProperties } from "react";
+import useDragAndDrop from "../../hooks/useDragAndDrop";
 import { Image } from "../../types/BaseTypes";
-import { CSSProperties, useState } from "react";
 
 type ImageObjectProps = {
   imageObject: Image;
   scale?: number;
-  containerRef: any;
+  parentRef: React.RefObject<HTMLElement>;
 };
 
-const ImageObject = ({ imageObject, scale = 1, containerRef }: ImageObjectProps) => {
+const ImageObject = ({ imageObject, scale = 1, parentRef }: ImageObjectProps) => {
+  const ref = useRef<HTMLDivElement>(null);
   const [pos, setPosition] = useState(imageObject.pos);
-  const [size, setSize] = useState(imageObject.size);
-  const [dragging, setDragging] = useState(false);
 
   const imageObjectStyles: CSSProperties = {
     position: "absolute",
     top: `${pos.y * scale}px`,
     left: `${pos.x * scale}px`,
-    width: `${size.width * scale}px`,
-    height: `${size.height * scale}px`,
-    cursor: dragging ? "grabbing" : "grab",
-    boxSizing: "border-box", // Учитываем рамку в размерах
+    width: `${imageObject.size.width * scale}px`,
+    height: `${imageObject.size.height * scale}px`,
+    cursor: "grab",
+    boxSizing: "border-box",
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   };
 
-  const { setCurrentElement } = useAppContext();
-
-  const handleMouseDownMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const startX = e.clientX;
-    const startY = e.clientY;
-
-    const initialX = pos.x;
-    const initialY = pos.y;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const deltaX = (event.clientX - startX) / scale;
-      const deltaY = (event.clientY - startY) / scale;
-
-      setPosition({
-        x: Math.max(0, Math.min(containerRect.width - size.width, initialX + deltaX)),
-        y: Math.max(0, Math.min(containerRect.height - size.height, initialY + deltaY)),
-      });
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-
-      setDragging(false);
-    };
-
-    setDragging(true);
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
+  useDragAndDrop(ref, parentRef, setPosition);
 
   return (
-    <div onMouseDown={handleMouseDownMove} style={imageObjectStyles}>
-      <img
-        style={{ width: "100%", height: "100%" }}
-        onClick={() => {
-          setCurrentElement(imageObject);
-        }}
-        src={`${imageObject.url}`}
-      />
+    <div ref={ref} style={imageObjectStyles}>
+      <img style={{ width: "100%", height: "100%" }} src={imageObject.url} alt={imageObject.alt || "Image"} />
     </div>
   );
 };

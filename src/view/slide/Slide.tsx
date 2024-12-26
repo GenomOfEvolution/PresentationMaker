@@ -49,11 +49,18 @@ const Slide = ({ containerRef, slide, scale = 1, isSelected, className }: SlideP
         {slide.elements.map((slideObject) => {
           switch (slideObject.objectType) {
             case ObjectType.Text:
-              return <TextObject key={slideObject.id} textObject={slideObject} scale={scale}></TextObject>;
+              return (
+                <TextObject
+                  parentRef={containerRef}
+                  key={slideObject.id}
+                  textObject={slideObject}
+                  scale={scale}
+                ></TextObject>
+              );
             case ObjectType.Image:
               return (
                 <ImageObject
-                  containerRef={containerRef}
+                  parentRef={containerRef}
                   key={slideObject.id}
                   imageObject={slideObject}
                   scale={scale}
