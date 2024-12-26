@@ -4,7 +4,7 @@ export type SelectionType = {
 };
 
 const createSelection = (): SelectionType => {
-  return { selectedSlidesId: null, selectedSlideObjectsId: null };
+  return { selectedSlidesId: null, selectedSlideObjectsId: [] };
 };
 
 export { createSelection };

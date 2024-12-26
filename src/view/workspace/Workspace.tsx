@@ -3,12 +3,14 @@ import { NewSlideCreator } from "../../components/newSlideCreator/NewSlideCreato
 import { SlideType } from "../../types/Slide.ts";
 import { Slide } from "../slide/Slide.tsx";
 import styles from "../workspace/Workspace.module.css";
+import { SelectionType } from "../../types/Selection.ts";
 
 type WorkspaceProps = {
   slide: SlideType;
+  selection: SelectionType;
 };
 
-const Workspace = ({ slide }: WorkspaceProps) => {
+const Workspace = ({ slide, selection }: WorkspaceProps) => {
   const containerRef = useRef(null);
 
   if (slide === undefined) {
@@ -21,7 +23,7 @@ const Workspace = ({ slide }: WorkspaceProps) => {
 
   return (
     <div className={styles.workspace} ref={containerRef}>
-      <Slide containerRef={containerRef} scale={1} isSelected={false} className="" slide={slide} />
+      <Slide selection={selection} containerRef={containerRef} scale={1} className="" slide={slide} />
     </div>
   );
 };

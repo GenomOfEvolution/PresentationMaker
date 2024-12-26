@@ -2,14 +2,17 @@ import React, { useRef, useState, CSSProperties } from "react";
 import useDragAndDrop from "../../hooks/useDragAndDrop";
 import { Image } from "../../types/BaseTypes";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
+import { SelectionType } from "../../types/Selection";
+import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 
 type ImageObjectProps = {
   imageObject: Image;
   scale?: number;
   parentRef: React.RefObject<HTMLElement>;
+  selection: SelectionType;
 };
 
-const ImageObject = ({ imageObject, scale = 1, parentRef }: ImageObjectProps) => {
+const ImageObject = ({ imageObject, scale = 1, parentRef, selection }: ImageObjectProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPosition] = useState(imageObject.pos);
 
@@ -26,14 +29,21 @@ const ImageObject = ({ imageObject, scale = 1, parentRef }: ImageObjectProps) =>
     justifyContent: "center",
   };
 
+  const handleSlideObjectClick = useHandleSlideObjectClick(imageObject);
+
   useDragAndDrop(ref, parentRef, setPosition);
   const { setCurrentElement } = useAppContext();
+
+  if (selection.selectedSlideObjectsId?.includes(imageObject.id)) {
+    imageObjectStyles.boxShadow = "0 0 0 3px #0b57d0";
+  }
 
   return (
     <div
       ref={ref}
       style={imageObjectStyles}
-      onClick={() => {
+      onClick={(event) => {
+        handleSlideObjectClick(selection, event);
         setCurrentElement(imageObject);
       }}
     >

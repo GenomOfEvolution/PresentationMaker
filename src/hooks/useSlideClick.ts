@@ -8,6 +8,8 @@ const useSlideClick = (slides: SlideType[], selection: SelectionType) => {
   const onSlideClick = useCallback(
     (slideId: string, selection: SelectionType, event) => {
       const curSel: SelectionType = selection;
+      curSel.selectedSlideObjectsId = [];
+
       if (event.ctrlKey) {
         if (!curSel.selectedSlidesId?.includes(slideId) && curSel.selectedSlidesId!.length >= 1) {
           curSel.selectedSlidesId!.push(slideId);

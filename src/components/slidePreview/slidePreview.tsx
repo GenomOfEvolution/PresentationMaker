@@ -35,28 +35,6 @@ const SlidePreview = ({ slide, scale, isSelected }: SlidePreviewProps) => {
       break;
   }
 
-  /*
-  slide.elements.map((slideObject) => {
-          switch (slideObject.objectType) {
-            case ObjectType.Text:
-              return (
-                <div></div>
-              );
-            case ObjectType.Image:
-              return (
-                <ImageObjectPreview
-                  key={slideObject.id}
-                  imageObject={slideObject}
-                  scale={scale}
-                  />
-              );
-            default:
-              throw new Error(`Unknown slide type`);
-          }
-        }
-  
-  */
-
   return (
     <div className={styles.slidePreview + " " + itemStyles.item} style={slideStyles}>
       {slide.elements.map((slideObject) => {

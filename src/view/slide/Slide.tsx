@@ -4,6 +4,7 @@ import { TextObject } from "./TextObject.tsx";
 import { ImageObject } from "./ImageObject.tsx";
 import styles from "../slide/Slide.module.css";
 import { CSSProperties } from "react";
+import { SelectionType } from "../../types/Selection.ts";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -14,9 +15,10 @@ type SlideProps = {
   scale?: number;
   className: string;
   containerRef: any;
+  selection: SelectionType;
 };
 
-const Slide = ({ containerRef, slide, scale = 1, className }: SlideProps) => {
+const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlideProps) => {
   const slideStyles: CSSProperties = {
     width: `${SLIDE_WIDTH * scale}px`,
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
@@ -45,11 +47,23 @@ const Slide = ({ containerRef, slide, scale = 1, className }: SlideProps) => {
           switch (slideObject.objectType) {
             case ObjectType.Text:
               return (
-                <TextObject parentRef={containerRef} key={slideObject.id} textObject={slideObject} scale={scale} />
+                <TextObject
+                  selection={selection}
+                  parentRef={containerRef}
+                  key={slideObject.id}
+                  textObject={slideObject}
+                  scale={scale}
+                />
               );
             case ObjectType.Image:
               return (
-                <ImageObject parentRef={containerRef} key={slideObject.id} imageObject={slideObject} scale={scale} />
+                <ImageObject
+                  selection={selection}
+                  parentRef={containerRef}
+                  key={slideObject.id}
+                  imageObject={slideObject}
+                  scale={scale}
+                />
               );
             default:
               throw new Error(`Unknown slide type`);

@@ -20,7 +20,7 @@ const App = ({ editor }: AppProps) => {
         <TopPanel title={editor.presentation.name} selection={editor.selection} />
         <div className={styles.container}>
           <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
-          <Workspace slide={activeSlide!} />
+          <Workspace selection={editor.selection} slide={activeSlide!} />
         </div>
       </AppContextProvider>
     </>

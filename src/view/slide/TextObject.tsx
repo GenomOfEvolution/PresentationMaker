@@ -2,14 +2,17 @@ import React, { useRef, useState, CSSProperties } from "react";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 import { Text } from "../../types/BaseTypes";
 import useDragAndDrop from "../../hooks/useDragAndDrop";
+import { SelectionType } from "../../types/Selection";
+import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 
 type TextObjectProps = {
   textObject: Text;
   scale?: number;
   parentRef: React.RefObject<HTMLElement>;
+  selection: SelectionType;
 };
 
-const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
+const TextObject = ({ textObject, scale = 1, parentRef, selection }: TextObjectProps) => {
   const ref = useRef<HTMLParagraphElement>(null);
   const [pos, setPosition] = useState(textObject.pos);
 
@@ -24,6 +27,10 @@ const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
     color: `${textObject.fontColor}`,
   };
 
+  if (selection.selectedSlideObjectsId?.includes(textObject.id)) {
+    textObjectStyles.boxShadow = "0 0 0 3px #0b57d0";
+  }
+  const handleSlideObjectClick = useHandleSlideObjectClick(textObject);
   useDragAndDrop(ref, parentRef, setPosition);
 
   const { setCurrentElement } = useAppContext();
@@ -32,8 +39,9 @@ const TextObject = ({ textObject, scale = 1, parentRef }: TextObjectProps) => {
     <div
       ref={ref}
       style={textObjectStyles}
-      onClick={() => {
+      onClick={(event) => {
         setCurrentElement(textObject);
+        handleSlideObjectClick(selection, event);
       }}
     >
       <span style={{ display: "block", width: textObject.size.width * scale }}>{textObject.content}</span>
