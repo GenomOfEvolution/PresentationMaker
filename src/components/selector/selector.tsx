@@ -1,13 +1,15 @@
 import { useRef, useState, useEffect, CSSProperties, RefObject } from "react";
 import { Point, Size, SlideObject } from "../../types/BaseTypes";
+import useDragAndDrop from "../../hooks/useDragAndDrop";
 
 type SelectorProps = {
   selectedObjectsId: string[];
   objects: SlideObject[];
   containerRef: RefObject<HTMLElement>;
+  onUpdatePositions: (positions: { [id: string]: Point }) => void;
 };
 
-const Selector = ({ selectedObjectsId, objects, containerRef }: SelectorProps) => {
+const Selector = ({ selectedObjectsId, objects, containerRef, onUpdatePositions }: SelectorProps) => {
   const selectorRef = useRef<HTMLDivElement>(null);
   const [selectorPosition, setSelectorPosition] = useState<Point>({ x: 0, y: 0 });
   const [selectorSize, setSelectorSize] = useState<Size>({ width: 0, height: 0 });
@@ -30,46 +32,39 @@ const Selector = ({ selectedObjectsId, objects, containerRef }: SelectorProps) =
     setSelectorSize({ width: maxX - minX, height: maxY - minY });
   }, [selectedObjectsId, objects, containerRef]);
 
+  useDragAndDrop(selectorRef, containerRef, (newPos) => {
+    const deltaX = newPos.x - selectorPosition.x;
+    const deltaY = newPos.y - selectorPosition.y;
+
+    const newPositions: { [id: string]: Point } = {};
+
+    selectedObjectsId.forEach((id) => {
+      const obj = objects.find((obj) => obj.id === id);
+      if (obj) {
+        newPositions[id] = {
+          x: obj.pos.x + deltaX,
+          y: obj.pos.y + deltaY,
+        };
+      }
+    });
+
+    console.log(newPositions);
+
+    onUpdatePositions(newPositions);
+    setSelectorPosition(newPos);
+  });
+
   const selectorStyles: CSSProperties = {
     position: "absolute",
     top: `${selectorPosition.y}px`,
     left: `${selectorPosition.x}px`,
     width: `${selectorSize.width}px`,
     height: `${selectorSize.height}px`,
-    border: "2px dashed #0b57d0",
+    boxShadow: "0 0 0 3px #0b57d0",
     boxSizing: "border-box",
-    pointerEvents: "none",
   };
 
-  const handleStyles: CSSProperties = {
-    position: "absolute",
-    width: "5px",
-    height: "5px",
-    backgroundColor: "#0b57d0",
-    zIndex: 10,
-  };
-
-  const topPos = `${selectorPosition.y - 2.5}px`;
-  const leftPos = `${selectorPosition.x - 2.5}px`;
-  const rightPos = `${selectorPosition.x + selectorSize.width - 2.5}px`;
-  const botPos = `${selectorPosition.y + selectorSize.height - 2.5}px`;
-
-  const handles = [
-    { direction: "top-left", style: { top: topPos, left: leftPos, cursor: "nwse-resize" } },
-    { direction: "top-right", style: { top: topPos, right: rightPos, cursor: "nesw-resize" } },
-    { direction: "bottom-left", style: { bottom: botPos, left: leftPos, cursor: "nesw-resize" } },
-    { direction: "bottom-right", style: { bottom: botPos, right: rightPos, cursor: "nwse-resize" } },
-    { direction: "top", style: { top: topPos, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" } },
-    { direction: "bottom", style: { bottom: botPos, left: "50%", transform: "translateX(-50%)", cursor: "ns-resize" } },
-    { direction: "left", style: { top: "50%", left: leftPos, transform: "translateY(-50%)", cursor: "ew-resize" } },
-    { direction: "right", style: { top: "50%", right: rightPos, transform: "translateY(-50%)", cursor: "ew-resize" } },
-  ];
-
-  return (
-    <>
-      <div ref={selectorRef} style={selectorStyles} />
-    </>
-  );
+  return <div ref={selectorRef} style={selectorStyles} />;
 };
 
 export default Selector;

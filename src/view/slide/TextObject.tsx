@@ -1,13 +1,15 @@
 import React, { CSSProperties } from "react";
 import { Text } from "../../types/BaseTypes";
+import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
+import { SelectionType } from "../../types/Selection";
 
 type TextObjectProps = {
   textObject: Text;
   scale?: number;
-  onSelect: (event: React.MouseEvent) => void;
+  selection: SelectionType;
 };
 
-const TextObject = ({ textObject, scale = 1, onSelect }: TextObjectProps) => {
+const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
   const textObjectStyles: CSSProperties = {
     position: "absolute",
     top: `${textObject.pos.y * scale}px`,
@@ -24,8 +26,10 @@ const TextObject = ({ textObject, scale = 1, onSelect }: TextObjectProps) => {
     justifyContent: "center",
   };
 
+  const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
+
   return (
-    <p style={textObjectStyles} onClick={onSelect}>
+    <p style={textObjectStyles} onClick={handleSlideObjectClick}>
       {textObject.content}
     </p>
   );

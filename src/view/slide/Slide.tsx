@@ -1,12 +1,14 @@
 import { SlideType, BackgroundType } from "../../types/Slide.ts";
-import { Color, Gradient, gradientToCss, ObjectType } from "../../types/BaseTypes.ts";
+import { Color, Gradient, gradientToCss, ObjectType, Point } from "../../types/BaseTypes.ts";
 import { TextObject } from "./TextObject.tsx";
 import { ImageObject } from "./ImageObject.tsx";
 import styles from "../slide/Slide.module.css";
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { SelectionType } from "../../types/Selection.ts";
 import Selector from "../../components/selector/selector.tsx";
-import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick.ts";
+import { dispatch } from "../../store/editor.ts";
+import { updatePosition } from "../../store/functions/updatePosition.ts";
+import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -25,6 +27,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
     width: `${SLIDE_WIDTH * scale}px`,
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
   };
+  const [positions, setPositions] = useState<{ [id: string]: Point }>({});
 
   switch (slide.bg.type) {
     case BackgroundType.Image:
@@ -42,31 +45,32 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
       break;
   }
 
+  useEffect(() => {
+    if (Object.keys(positions).length > 0) {
+      Object.keys(positions).forEach((id) => {
+        dispatch(updatePosition, { id, pos: positions[id] });
+      });
+    }
+  }, [positions]);
+
+  const handleContainerClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      dispatch(setSelectionSlide, {
+        ...selection,
+        selectedSlideObjectsId: [],
+      });
+    }
+  };
+
   return (
     <>
-      <div style={slideStyles} className={styles.slide + " " + className} id={slide.id}>
+      <div style={slideStyles} className={styles.slide + " " + className} id={slide.id} onClick={handleContainerClick}>
         {slide.elements.map((slideObject) => {
-          const handleSlideObjectClick = useHandleSlideObjectClick(slideObject, selection);
-
           switch (slideObject.objectType) {
             case ObjectType.Text:
-              return (
-                <TextObject
-                  key={slideObject.id}
-                  textObject={slideObject}
-                  scale={scale}
-                  onSelect={(event) => handleSlideObjectClick(event)}
-                />
-              );
+              return <TextObject key={slideObject.id} textObject={slideObject} scale={scale} selection={selection} />;
             case ObjectType.Image:
-              return (
-                <ImageObject
-                  key={slideObject.id}
-                  imageObject={slideObject}
-                  scale={scale}
-                  onSelect={(event) => handleSlideObjectClick(event)}
-                />
-              );
+              return <ImageObject key={slideObject.id} imageObject={slideObject} scale={scale} selection={selection} />;
             default:
               throw new Error(`Unknown slide type`);
           }
@@ -77,6 +81,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
           selectedObjectsId={selection.selectedSlideObjectsId}
           objects={slide.elements}
           containerRef={containerRef}
+          onUpdatePositions={setPositions}
         />
       )}
     </>

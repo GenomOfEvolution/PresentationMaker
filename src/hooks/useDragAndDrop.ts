@@ -19,10 +19,14 @@ const useDragAndDrop = (
       const childRect = childRef.current.getBoundingClientRect();
       const parentRect = parentRef.current.getBoundingClientRect();
 
+      console.log(parentRect);
+
       startPos.current = { x: e.clientX, y: e.clientY };
-      initialPos.current = { x: childRect.left - parentRect.left, y: childRect.top - parentRect.top };
-      shift.current = { x: e.clientX - childRect.left, y: e.clientY - childRect.top };
+      initialPos.current = { x: childRect.left, y: childRect.top };
+      shift.current = { x: e.clientX - childRect.left + parentRect.x, y: e.clientY - childRect.top + parentRect.y };
       isDragging.current = true;
+
+      console.log(startPos, initialPos, shift);
 
       const handleMouseMove = (event: MouseEvent) => {
         if (!isDragging.current || !childRef.current || !parentRef.current) return;
@@ -38,16 +42,16 @@ const useDragAndDrop = (
           y: initialPos.current.y + deltaY,
         };
 
-        if (newPos.x < 0) {
-          newPos.x = 0;
-        } else if (newPos.x > parentRect.width - childRect.width) {
-          newPos.x = parentRect.width - childRect.width;
+        if (newPos.x < parentRect.x) {
+          newPos.x = parentRect.x;
+        } else if (newPos.x > parentRect.x + parentRect.width - childRect.width) {
+          newPos.x = parentRect.x + parentRect.width - childRect.width;
         }
 
-        if (newPos.y < 0) {
-          newPos.y = 0;
-        } else if (newPos.y > parentRect.height - childRect.height) {
-          newPos.y = parentRect.height - childRect.height;
+        if (newPos.y < parentRect.y) {
+          newPos.y = parentRect.y;
+        } else if (newPos.y > parentRect.y + parentRect.height - childRect.height) {
+          newPos.y = parentRect.y + parentRect.height - childRect.height;
         }
 
         setPosition(newPos);
