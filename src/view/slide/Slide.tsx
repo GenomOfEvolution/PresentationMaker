@@ -5,6 +5,8 @@ import { ImageObject } from "./ImageObject.tsx";
 import styles from "../slide/Slide.module.css";
 import { CSSProperties } from "react";
 import { SelectionType } from "../../types/Selection.ts";
+import Selector from "../../components/selector/selector.tsx";
+import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick.ts";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -44,25 +46,25 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
     <>
       <div style={slideStyles} className={styles.slide + " " + className} id={slide.id}>
         {slide.elements.map((slideObject) => {
+          const handleSlideObjectClick = useHandleSlideObjectClick(slideObject, selection);
+
           switch (slideObject.objectType) {
             case ObjectType.Text:
               return (
                 <TextObject
-                  selection={selection}
-                  parentRef={containerRef}
                   key={slideObject.id}
                   textObject={slideObject}
                   scale={scale}
+                  onSelect={(event) => handleSlideObjectClick(event)}
                 />
               );
             case ObjectType.Image:
               return (
                 <ImageObject
-                  selection={selection}
-                  parentRef={containerRef}
                   key={slideObject.id}
                   imageObject={slideObject}
                   scale={scale}
+                  onSelect={(event) => handleSlideObjectClick(event)}
                 />
               );
             default:
@@ -70,6 +72,13 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
           }
         })}
       </div>
+      {selection.selectedSlideObjectsId!.length > 0 && (
+        <Selector
+          selectedObjectsId={selection.selectedSlideObjectsId}
+          objects={slide.elements}
+          containerRef={containerRef}
+        />
+      )}
     </>
   );
 };

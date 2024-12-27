@@ -4,6 +4,8 @@ import styles from "./SlidesList.module.css";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider.tsx";
 import useSlideClick from "../../hooks/useSlideClick.ts";
 import { SlidePreview } from "../../components/slidePreview/slidePreview.tsx";
+import { dispatch } from "../../store/editor.ts";
+import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
 
 const SLIDE_PREVIEW_SCALE = 0.2;
 

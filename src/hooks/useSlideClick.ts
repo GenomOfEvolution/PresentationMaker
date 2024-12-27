@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { dispatch } from "../store/editor.ts";
+import { dispatch, getEditor } from "../store/editor.ts";
 import { setSelectionSlide } from "../store/functions/setSelectionSlide.ts";
 import { SelectionType } from "../types/Selection.ts";
 import { SlideType } from "../types/Slide.ts";
