@@ -3,7 +3,7 @@ import { Color, Gradient, gradientToCss, ObjectType, Point } from "../../types/B
 import { TextObject } from "./TextObject.tsx";
 import { ImageObject } from "./ImageObject.tsx";
 import styles from "../slide/Slide.module.css";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { SelectionType } from "../../types/Selection.ts";
 import Selector from "../../components/selector/selector.tsx";
 import { dispatch } from "../../store/editor.ts";
@@ -62,9 +62,17 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
     }
   };
 
+  const slideRef = useRef(null);
+
   return (
     <>
-      <div style={slideStyles} className={styles.slide + " " + className} id={slide.id} onClick={handleContainerClick}>
+      <div
+        style={slideStyles}
+        className={styles.slide + " " + className}
+        id={slide.id}
+        onClick={handleContainerClick}
+        ref={slideRef}
+      >
         {slide.elements.map((slideObject) => {
           switch (slideObject.objectType) {
             case ObjectType.Text:
@@ -81,7 +89,9 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
           selectedObjectsId={selection.selectedSlideObjectsId}
           objects={slide.elements}
           containerRef={containerRef}
+          slideRef={slideRef}
           onUpdatePositions={setPositions}
+          onUpdateSizes={() => {}}
         />
       )}
     </>

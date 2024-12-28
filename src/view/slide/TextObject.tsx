@@ -20,7 +20,6 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     fontFamily: `${textObject.fontName}`,
     color: `${textObject.fontColor}`,
     boxSizing: "border-box",
-    overflow: "hidden",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -29,9 +28,9 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
   const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
 
   return (
-    <p style={textObjectStyles} onClick={handleSlideObjectClick}>
-      {textObject.content}
-    </p>
+    <div style={textObjectStyles} onClick={handleSlideObjectClick}>
+      <span style={{ display: "block", width: textObject.size.width * scale }}>{textObject.content}</span>
+    </div>
   );
 };
 

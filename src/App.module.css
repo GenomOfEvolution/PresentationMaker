@@ -32,3 +32,10 @@
   bottom: 0px;
   height: calc(100% - 115px);
 }
+
+.workspace__wrapper {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}

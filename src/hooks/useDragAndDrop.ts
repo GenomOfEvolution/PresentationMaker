@@ -19,23 +19,16 @@ const useDragAndDrop = (
       const childRect = childRef.current.getBoundingClientRect();
       const parentRect = parentRef.current.getBoundingClientRect();
 
-      console.log(parentRect);
-
       startPos.current = { x: e.clientX, y: e.clientY };
       initialPos.current = { x: childRect.left, y: childRect.top };
       shift.current = { x: e.clientX - childRect.left + parentRect.x, y: e.clientY - childRect.top + parentRect.y };
       isDragging.current = true;
-
-      console.log(startPos, initialPos, shift);
 
       const handleMouseMove = (event: MouseEvent) => {
         if (!isDragging.current || !childRef.current || !parentRef.current) return;
 
         const deltaX = event.clientX - startPos.current.x;
         const deltaY = event.clientY - startPos.current.y;
-
-        const parentRect = parentRef.current.getBoundingClientRect();
-        const childRect = childRef.current.getBoundingClientRect();
 
         let newPos = {
           x: initialPos.current.x + deltaX,

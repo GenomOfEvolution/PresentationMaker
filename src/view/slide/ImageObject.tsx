@@ -26,7 +26,6 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
   const contentStyles: CSSProperties = {
     width: "100%",
     height: "100%",
-    pointerEvents: "none",
     userSelect: "none",
   };
 
