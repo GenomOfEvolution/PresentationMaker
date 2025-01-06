@@ -1,7 +1,7 @@
 import { RefObject, useRef, useEffect } from "react";
 import { Point, Size } from "../types/BaseTypes";
 import { dispatch } from "../store/editor";
-import { updatePosition } from "../store/functions/updatePosition";
+import { updateSize } from "../store/functions/updateSize";
 
 type ResizeHookProps = {
   selectorRef: RefObject<HTMLDivElement>;
@@ -51,8 +51,6 @@ const useResize = ({
 
       let newWidth = initialSize.current.width;
       let newHeight = initialSize.current.height;
-      let newX = initialPos.current.x;
-      let newY = initialPos.current.y;
 
       if (direction.includes("right")) {
         newWidth = Math.max(10, initialSize.current.width + deltaX);
@@ -64,15 +62,11 @@ const useResize = ({
 
       if (direction.includes("left")) {
         newWidth = Math.max(10, initialSize.current.width - deltaX);
-        newX = initialPos.current.x - initialSize.current.width * 2 + deltaX;
       }
 
       if (direction.includes("top")) {
         newHeight = Math.max(10, initialSize.current.height - deltaY);
-        newY = initialPos.current.y - initialSize.current.height * 2 + deltaY;
       }
-
-      console.log("JOPA123");
 
       const newSizes: { [id: string]: Size } = {};
       const newPositions: { [id: string]: Point } = {};
@@ -85,25 +79,19 @@ const useResize = ({
             height: direction.includes("bottom") || direction.includes("top") ? newHeight : obj.size.height,
           };
           newPositions[id] = {
-            x: direction.includes("left") ? newX : obj.pos.x,
-            y: direction.includes("top") ? newY : obj.pos.y,
+            x: direction.includes("left") ? obj.pos.x + deltaX : obj.pos.x,
+            y: direction.includes("top") ? obj.pos.y + deltaY : obj.pos.y,
           };
         }
       });
 
       onUpdateSizes(newSizes);
       onUpdatePositions(newPositions);
-
-      if (selectorRef.current) {
-        selectorRef.current.style.width = `${newWidth}px`;
-        selectorRef.current.style.height = `${newHeight}px`;
-        selectorRef.current.style.left = `${newX}px`;
-        selectorRef.current.style.top = `${newY}px`;
-      }
     };
 
     const handleMouseUp = () => {
       isResizing.current = false;
+
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };

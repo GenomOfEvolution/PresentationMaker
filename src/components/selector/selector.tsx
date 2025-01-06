@@ -36,14 +36,13 @@ const Selector = ({
 
     if (selectedObjects.length === 0) return;
 
-    const minX = Math.min(...selectedObjects.map((elem) => elem.pos.x + slideOffset.x + 3));
-    const minY = Math.min(...selectedObjects.map((elem) => elem.pos.y + slideOffset.y + 3));
-    const maxX = Math.max(...selectedObjects.map((elem) => elem.pos.x + elem.size.width + slideOffset.x));
-    const maxY = Math.max(...selectedObjects.map((elem) => elem.pos.y + elem.size.height + slideOffset.y));
+    const minX = Math.min(...selectedObjects.map((elem) => elem.pos.x + slideOffset.x + 1));
+    const minY = Math.min(...selectedObjects.map((elem) => elem.pos.y + slideOffset.y + 1));
+    const maxX = Math.max(...selectedObjects.map((elem) => elem.pos.x + elem.size.width + slideOffset.x + 1));
+    const maxY = Math.max(...selectedObjects.map((elem) => elem.pos.y + elem.size.height + slideOffset.y + 1));
 
     setSelectorPosition({ x: bounds.x + minX, y: bounds.y + minY });
     setSelectorSize({ width: maxX - minX, height: maxY - minY });
-    console.log(selectorPosition);
   }, [selectedObjectsId, objects, containerRef]);
 
   useDragAndDrop(selectorRef, containerRef, (newPos) => {
@@ -60,7 +59,6 @@ const Selector = ({
           x: obj.pos.x + deltaX,
           y: obj.pos.y + deltaY,
         };
-        newSizes[id] = obj.size;
       }
     });
 
@@ -81,19 +79,19 @@ const Selector = ({
 
   const handleStyles: CSSProperties = {
     position: "absolute",
-    width: "10px",
-    height: "10px",
+    width: "9px",
+    height: "9px",
     backgroundColor: "#0b57d0",
     zIndex: 10,
   };
 
-  const topPos = `${selectorPosition.y - 5}px`;
-  const leftPos = `${selectorPosition.x - 5}px`;
-  const rightPos = `${selectorPosition.x + selectorSize.width - 5}px`;
-  const botPos = `${selectorPosition.y + selectorSize.height - 5}px`;
+  const topPos = `${selectorPosition.y - 5.5}px`;
+  const leftPos = `${selectorPosition.x - 6.5}px`;
+  const rightPos = `${selectorPosition.x + selectorSize.width - 3.5}px`;
+  const botPos = `${selectorPosition.y + selectorSize.height - 2.5}px`;
 
-  const midX = `${selectorPosition.x + (selectorSize.width - 5) / 2}px`;
-  const midY = `${selectorPosition.y + (selectorSize.height - 5) / 2}px`;
+  const midX = `${selectorPosition.x + (selectorSize.width - 5) / 2 - 2}px`;
+  const midY = `${selectorPosition.y + (selectorSize.height - 5) / 2 - 2}px`;
 
   const handles = [
     { direction: "top-left", style: { top: topPos, left: leftPos, cursor: "nwse-resize" } },

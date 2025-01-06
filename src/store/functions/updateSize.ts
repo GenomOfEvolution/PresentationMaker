@@ -1,13 +1,13 @@
-import { Point } from "../../types/BaseTypes";
+import { Size } from "../../types/BaseTypes";
 import { EditorType } from "../editorType";
 
-const updatePosition = (editor: EditorType, { id, pos }: { id: string; pos: Point }): EditorType => {
+const updateSize = (editor: EditorType, { id, size }: { id: string; size: Size }): EditorType => {
   const newPres = { ...editor.presentation };
 
   newPres.slideCollection = newPres.slideCollection.map((slide) => {
     const newElements = slide.elements.map((element) => {
       if (element.id === id) {
-        return { ...element, pos };
+        return { ...element, size };
       }
       return element;
     });
@@ -17,4 +17,4 @@ const updatePosition = (editor: EditorType, { id, pos }: { id: string; pos: Poin
   return { ...editor, presentation: newPres };
 };
 
-export { updatePosition };
+export { updateSize };

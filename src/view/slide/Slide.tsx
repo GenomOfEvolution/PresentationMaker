@@ -1,5 +1,5 @@
 import { SlideType, BackgroundType } from "../../types/Slide.ts";
-import { Color, Gradient, gradientToCss, ObjectType, Point } from "../../types/BaseTypes.ts";
+import { Color, Gradient, gradientToCss, ObjectType, Point, Size } from "../../types/BaseTypes.ts";
 import { TextObject } from "./TextObject.tsx";
 import { ImageObject } from "./ImageObject.tsx";
 import styles from "../slide/Slide.module.css";
@@ -9,6 +9,7 @@ import Selector from "../../components/selector/selector.tsx";
 import { dispatch } from "../../store/editor.ts";
 import { updatePosition } from "../../store/functions/updatePosition.ts";
 import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
+import { updateSize } from "../../store/functions/updateSize.ts";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -28,6 +29,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
   };
   const [positions, setPositions] = useState<{ [id: string]: Point }>({});
+  const [sizes, setSizes] = useState<{ [id: string]: Size }>({});
 
   switch (slide.bg.type) {
     case BackgroundType.Image:
@@ -51,7 +53,13 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
         dispatch(updatePosition, { id, pos: positions[id] });
       });
     }
-  }, [positions]);
+
+    if (Object.keys(sizes).length > 0) {
+      Object.keys(sizes).forEach((id) => {
+        dispatch(updateSize, { id, size: sizes[id] });
+      });
+    }
+  }, [positions, sizes]);
 
   const handleContainerClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
@@ -91,7 +99,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
           containerRef={containerRef}
           slideRef={slideRef}
           onUpdatePositions={setPositions}
-          onUpdateSizes={() => {}}
+          onUpdateSizes={setSizes}
         />
       )}
     </>
