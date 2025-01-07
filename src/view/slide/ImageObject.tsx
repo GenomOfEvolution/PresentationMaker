@@ -14,14 +14,25 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
     position: "absolute",
     top: `${imageObject.pos.y * scale}px`,
     left: `${imageObject.pos.x * scale}px`,
-    width: `${imageObject.size.width * scale}px`,
-    height: `${imageObject.size.height * scale}px`,
+    width: `${Math.abs(imageObject.size.width) * scale}px`,
+    height: `${Math.abs(imageObject.size.height) * scale}px`,
     boxSizing: "border-box",
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   };
+
+  imageObjectStyles.transform = "";
+  if (imageObject.size.width < 0) {
+    imageObjectStyles.transform += "scaleX(-1) ";
+    imageObjectStyles.left = `${(imageObject.pos.x + imageObject.size.width) * scale}px`;
+  }
+
+  if (imageObject.size.height < 0) {
+    imageObjectStyles.transform += " scaleY(-1)";
+    imageObjectStyles.top = `${(imageObject.pos.y + imageObject.size.height) * scale}px`;
+  }
 
   const contentStyles: CSSProperties = {
     width: "100%",
@@ -32,8 +43,8 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
   const handleSlideObjectClick = useHandleSlideObjectClick(imageObject, selection);
 
   return (
-    <div style={imageObjectStyles} onClick={(event) => handleSlideObjectClick(event)} draggable="false">
-      <img style={contentStyles} src={imageObject.url} alt="Slide Object" />
+    <div style={imageObjectStyles} onClick={(event) => handleSlideObjectClick(event)}>
+      <img style={contentStyles} src={imageObject.url} draggable="false" alt="Slide Object" />
     </div>
   );
 };

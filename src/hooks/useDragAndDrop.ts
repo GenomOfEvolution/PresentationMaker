@@ -37,14 +37,14 @@ const useDragAndDrop = (
 
         if (newPos.x < parentRect.x) {
           newPos.x = parentRect.x;
-        } else if (newPos.x + 2 > parentRect.x + parentRect.width - childRect.width) {
-          newPos.x = parentRect.x + parentRect.width - childRect.width;
+        } else if (newPos.x + 2 > parentRect.x + parentRect.width - childRect.width - 9) {
+          newPos.x = parentRect.x + parentRect.width - childRect.width - 9;
         }
 
         if (newPos.y < parentRect.y) {
           newPos.y = parentRect.y;
-        } else if (newPos.y + 2 > parentRect.y + parentRect.height - childRect.height) {
-          newPos.y = parentRect.y + parentRect.height - childRect.height;
+        } else if (newPos.y + 2 > parentRect.y + parentRect.height - childRect.height - 9) {
+          newPos.y = parentRect.y + parentRect.height - childRect.height - 9;
         }
 
         setPosition(newPos);

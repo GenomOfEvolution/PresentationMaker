@@ -14,8 +14,8 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     position: "absolute",
     top: `${textObject.pos.y * scale}px`,
     left: `${textObject.pos.x * scale}px`,
-    width: `${textObject.size.width * scale}px`,
-    height: `${textObject.size.height * scale}px`,
+    width: `${Math.abs(textObject.size.width) * scale}px`,
+    height: `${Math.abs(textObject.size.height) * scale}px`,
     fontSize: `${textObject.fontSize * scale}px`,
     fontFamily: `${textObject.fontName}`,
     color: `${textObject.fontColor}`,
@@ -25,11 +25,21 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     justifyContent: "center",
   };
 
+  if (textObject.size.width < 0) {
+    textObjectStyles.transform = "scaleX(-1)";
+    textObjectStyles.left = `${(textObject.pos.x + textObject.size.width) * scale}px`;
+  }
+
+  if (textObject.size.height < 0) {
+    textObjectStyles.transform = "scaleY(-1)";
+    textObjectStyles.top = `${(textObject.pos.y + textObject.size.height) * scale}px`;
+  }
+
   const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
 
   return (
     <div style={textObjectStyles} onClick={handleSlideObjectClick}>
-      <span style={{ display: "block", width: textObject.size.width * scale }}>{textObject.content}</span>
+      <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
     </div>
   );
 };

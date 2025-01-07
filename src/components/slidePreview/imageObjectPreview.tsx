@@ -11,8 +11,8 @@ const ImageObjectPreview = ({ imageObject, scale }: ImageObjectPreviewProps) => 
     position: "absolute",
     top: `${imageObject.pos.y * scale}px`,
     left: `${imageObject.pos.x * scale}px`,
-    width: `${imageObject.size.width * scale}px`,
-    height: `${imageObject.size.height * scale}px`,
+    width: `${Math.abs(imageObject.size.width) * scale}px`,
+    height: `${Math.abs(imageObject.size.height) * scale}px`,
     boxSizing: "border-box",
     overflow: "hidden",
     display: "flex",
@@ -20,6 +20,16 @@ const ImageObjectPreview = ({ imageObject, scale }: ImageObjectPreviewProps) => 
     justifyContent: "center",
     pointerEvents: "none",
   };
+
+  if (imageObject.size.width < 0) {
+    imageObjectStyles.transform = "scaleX(-1)";
+    imageObjectStyles.left = `${(imageObject.pos.x + imageObject.size.width) * scale}px`;
+  }
+
+  if (imageObject.size.height < 0) {
+    imageObjectStyles.transform = "scaleY(-1)";
+    imageObjectStyles.top = `${(imageObject.pos.y + imageObject.size.height) * scale}px`;
+  }
 
   return (
     <div style={imageObjectStyles}>

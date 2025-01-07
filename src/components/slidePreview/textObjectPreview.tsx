@@ -12,12 +12,22 @@ const TextObjectPreview = ({ textObject, scale }: TextObjectPreviewProps) => {
     position: "absolute",
     top: `${textObject.pos.y * scale}px`,
     left: `${textObject.pos.x * scale}px`,
-    width: `${textObject.size.width * scale}px`,
-    height: `${textObject.size.height * scale}px`,
+    width: `${Math.abs(textObject.size.width) * scale}px`,
+    height: `${Math.abs(textObject.size.height) * scale}px`,
     fontSize: `${textObject.fontSize * scale}px`,
     fontFamily: `${textObject.fontName}`,
     color: `${textObject.fontColor}`,
   };
+
+  if (textObject.size.width < 0) {
+    textObjectStyles.transform = "scaleX(-1)";
+    textObjectStyles.left = `${(textObject.pos.x + textObject.size.width) * scale}px`;
+  }
+
+  if (textObject.size.height < 0) {
+    textObjectStyles.transform = "scaleY(-1)";
+    textObjectStyles.top = `${(textObject.pos.y + textObject.size.height) * scale}px`;
+  }
 
   return (
     <div style={textObjectStyles}>

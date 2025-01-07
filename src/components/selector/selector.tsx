@@ -59,6 +59,14 @@ const Selector = ({
           x: obj.pos.x + deltaX,
           y: obj.pos.y + deltaY,
         };
+
+        if (selectorSize.width < 0) {
+          newPositions[id].x -= selectorSize.width;
+        }
+
+        if (selectorSize.height < 0) {
+          newPositions[id].y -= selectorSize.height;
+        }
       }
     });
 
@@ -71,8 +79,8 @@ const Selector = ({
     position: "absolute",
     top: `${selectorPosition.y}px`,
     left: `${selectorPosition.x}px`,
-    width: `${selectorSize.width}px`,
-    height: `${selectorSize.height}px`,
+    width: `${Math.abs(selectorSize.width)}px`,
+    height: `${Math.abs(selectorSize.height)}px`,
     boxShadow: "0 0 0 3px #0b57d0",
     boxSizing: "border-box",
   };
@@ -85,24 +93,90 @@ const Selector = ({
     zIndex: 10,
   };
 
-  const topPos = `${selectorPosition.y - 5.5}px`;
-  const leftPos = `${selectorPosition.x - 6.5}px`;
-  const rightPos = `${selectorPosition.x + selectorSize.width - 3.5}px`;
-  const botPos = `${selectorPosition.y + selectorSize.height - 2.5}px`;
+  selectorStyles.transform = "";
+  if (selectorSize.width < 0) {
+    selectorStyles.transform += " scaleX(-1) ";
+    selectorStyles.left = `${selectorPosition.x + selectorSize.width}px`;
+  }
 
-  const midX = `${selectorPosition.x + (selectorSize.width - 5) / 2 - 2}px`;
-  const midY = `${selectorPosition.y + (selectorSize.height - 5) / 2 - 2}px`;
+  if (selectorSize.height < 0) {
+    selectorStyles.transform += " scaleY(-1)";
+    selectorStyles.top = `${selectorPosition.y + selectorSize.height}px`;
+  }
+
+  const topPos = `${selectorPosition.y - 6}px`;
+  const leftPos = `${selectorPosition.x - 6}px`;
+  const rightPos = `${selectorPosition.x + selectorSize.width - 3}px`;
+  const botPos = `${selectorPosition.y + selectorSize.height - 3}px`;
+
+  const midX = `${selectorPosition.x + selectorSize.width / 2 - 4.5}px`;
+  const midY = `${selectorPosition.y + selectorSize.height / 2 - 4.5}px`;
 
   const handles = [
-    { direction: "top-left", style: { top: topPos, left: leftPos, cursor: "nwse-resize" } },
-    { direction: "top-right", style: { top: topPos, left: rightPos, cursor: "nesw-resize" } },
-    { direction: "bottom-left", style: { top: botPos, left: leftPos, cursor: "nesw-resize" } },
-    { direction: "bottom-right", style: { top: botPos, left: rightPos, cursor: "nwse-resize" } },
-
-    { direction: "top", style: { top: topPos, left: midX, cursor: "ns-resize" } },
-    { direction: "bottom", style: { top: botPos, left: midX, cursor: "ns-resize" } },
-    { direction: "left", style: { top: midY, left: leftPos, cursor: "ew-resize" } },
-    { direction: "right", style: { top: midY, left: rightPos, cursor: "ew-resize" } },
+    {
+      direction: "top-left",
+      style: {
+        top: topPos,
+        left: leftPos,
+        cursor: selectorSize.width * selectorSize.height > 0 ? "nwse-resize" : "nesw-resize",
+      },
+    },
+    {
+      direction: "top-right",
+      style: {
+        top: topPos,
+        left: rightPos,
+        cursor: selectorSize.width * selectorSize.height < 0 ? "nwse-resize" : "nesw-resize",
+      },
+    },
+    {
+      direction: "bottom-left",
+      style: {
+        top: botPos,
+        left: leftPos,
+        cursor: selectorSize.width * selectorSize.height < 0 ? "nwse-resize" : "nesw-resize",
+      },
+    },
+    {
+      direction: "bottom-right",
+      style: {
+        top: botPos,
+        left: rightPos,
+        cursor: selectorSize.width * selectorSize.height > 0 ? "nwse-resize" : "nesw-resize",
+      },
+    },
+    {
+      direction: "top",
+      style: {
+        top: topPos,
+        left: midX,
+        cursor: "ns-resize",
+      },
+    },
+    {
+      direction: "bottom",
+      style: {
+        top: botPos,
+        left: midX,
+        cursor: "ns-resize",
+      },
+    },
+    {
+      direction: "left",
+      style: {
+        top: midY,
+        left: leftPos,
+        cursor: "ew-resize",
+      },
+    },
+    {
+      direction: "right",
+      style: {
+        top: midY,
+        left: rightPos,
+        cursor: "ew-resize",
+      },
+    },
   ];
 
   const handleResize = useResize({

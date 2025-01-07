@@ -1,7 +1,5 @@
 import { RefObject, useRef, useEffect } from "react";
 import { Point, Size } from "../types/BaseTypes";
-import { dispatch } from "../store/editor";
-import { updateSize } from "../store/functions/updateSize";
 
 type ResizeHookProps = {
   selectorRef: RefObject<HTMLDivElement>;
@@ -33,8 +31,19 @@ const useResize = ({
     const startX = event.clientX - containerRect.left;
     const startY = event.clientY - containerRect.top;
 
-    const initialWidth = selectorRef.current!.getBoundingClientRect().width;
-    const initialHeight = selectorRef.current!.getBoundingClientRect().height;
+    const selectorStyles = selectorRef.current?.style;
+
+    const selectorRect = selectorRef.current!.getBoundingClientRect();
+    let initialWidth = selectorRect.width;
+    let initialHeight = selectorRect.height;
+
+    if (selectorStyles?.transform.includes("scaleX(-1)")) {
+      initialWidth = -Math.abs(initialWidth);
+    }
+    if (selectorStyles?.transform.includes("scaleY(-1)")) {
+      initialHeight = -Math.abs(initialHeight);
+    }
+
     const initialX = selectorRef.current!.getBoundingClientRect().left;
     const initialY = selectorRef.current!.getBoundingClientRect().top;
 
@@ -49,23 +58,42 @@ const useResize = ({
       const deltaX = event.clientX - containerRect.left - startX;
       const deltaY = event.clientY - containerRect.top - startY;
 
+      // let calcWidth = selectorRect.width;
+      // let calcHeight = selectorRect.height;
+
+      // console.log(calcHeight, calcWidth);
+
+      // if (
+      //   deltaX + selectorRect.x < containerRect.x ||
+      //   deltaX + selectorRect.x + calcWidth > containerRect.x + containerRect.width - 15
+      // ) {
+      //   return;
+      // }
+
+      // if (
+      //   deltaY + selectorRect.y < containerRect.y ||
+      //   deltaY + selectorRect.y + calcHeight > containerRect.y + containerRect.height - 15
+      // ) {
+      //   return;
+      // }
+
       let newWidth = initialSize.current.width;
       let newHeight = initialSize.current.height;
 
       if (direction.includes("right")) {
-        newWidth = Math.max(10, initialSize.current.width + deltaX);
+        newWidth = initialSize.current.width + deltaX;
       }
 
       if (direction.includes("bottom")) {
-        newHeight = Math.max(10, initialSize.current.height + deltaY);
+        newHeight = initialSize.current.height + deltaY;
       }
 
       if (direction.includes("left")) {
-        newWidth = Math.max(10, initialSize.current.width - deltaX);
+        newWidth = initialSize.current.width - deltaX;
       }
 
       if (direction.includes("top")) {
-        newHeight = Math.max(10, initialSize.current.height - deltaY);
+        newHeight = initialSize.current.height - deltaY;
       }
 
       const newSizes: { [id: string]: Size } = {};
@@ -78,6 +106,7 @@ const useResize = ({
             width: direction.includes("right") || direction.includes("left") ? newWidth : obj.size.width,
             height: direction.includes("bottom") || direction.includes("top") ? newHeight : obj.size.height,
           };
+
           newPositions[id] = {
             x: direction.includes("left") ? obj.pos.x + deltaX : obj.pos.x,
             y: direction.includes("top") ? obj.pos.y + deltaY : obj.pos.y,
