@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { Image } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
+import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 
 type ImageObjectProps = {
   imageObject: Image;
@@ -41,9 +42,16 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
   };
 
   const handleSlideObjectClick = useHandleSlideObjectClick(imageObject, selection);
+  const { setCurrentElement } = useAppContext();
 
   return (
-    <div style={imageObjectStyles} onClick={(event) => handleSlideObjectClick(event)}>
+    <div
+      style={imageObjectStyles}
+      onClick={(event) => {
+        handleSlideObjectClick(event);
+        setCurrentElement(imageObject);
+      }}
+    >
       <img style={contentStyles} src={imageObject.url} draggable="false" alt="Slide Object" />
     </div>
   );

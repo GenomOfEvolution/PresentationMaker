@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { Text } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
+import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 
 type TextObjectProps = {
   textObject: Text;
@@ -36,9 +37,16 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
   }
 
   const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
+  const { setCurrentElement } = useAppContext();
 
   return (
-    <div style={textObjectStyles} onClick={handleSlideObjectClick}>
+    <div
+      style={textObjectStyles}
+      onClick={(event) => {
+        handleSlideObjectClick(event);
+        setCurrentElement(textObject);
+      }}
+    >
       <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
     </div>
   );

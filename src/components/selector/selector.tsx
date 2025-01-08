@@ -83,6 +83,7 @@ const Selector = ({
     height: `${Math.abs(selectorSize.height)}px`,
     boxShadow: "0 0 0 3px #0b57d0",
     boxSizing: "border-box",
+    zIndex: 0,
   };
 
   const handleStyles: CSSProperties = {
