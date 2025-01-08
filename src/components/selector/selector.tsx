@@ -104,10 +104,10 @@ const Selector = ({
     selectorStyles.top = `${selectorPosition.y + selectorSize.height}px`;
   }
 
-  const topPos = `${selectorPosition.y - 6}px`;
-  const leftPos = `${selectorPosition.x - 6}px`;
-  const rightPos = `${selectorPosition.x + selectorSize.width - 3}px`;
-  const botPos = `${selectorPosition.y + selectorSize.height - 3}px`;
+  const topPos = `${selectorPosition.y - 4.5 + (selectorSize.height > 0 ? -1.5 : 1.5)}px`;
+  const leftPos = `${selectorPosition.x - 4.5 + (selectorSize.width > 0 ? -1.5 : 1.5)}px`;
+  const rightPos = `${selectorPosition.x + selectorSize.width - 4.5 + (selectorSize.width < 0 ? -1.5 : 1.5)}px`;
+  const botPos = `${selectorPosition.y + selectorSize.height - 4.5 + (selectorSize.height < 0 ? -1.5 : 1.5)}px`;
 
   const midX = `${selectorPosition.x + selectorSize.width / 2 - 4.5}px`;
   const midY = `${selectorPosition.y + selectorSize.height / 2 - 4.5}px`;
