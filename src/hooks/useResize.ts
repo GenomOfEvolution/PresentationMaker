@@ -55,8 +55,6 @@ const useResize = ({
     const handleMouseMove = (event: MouseEvent) => {
       if (!isResizing.current || !containerRef.current) return;
 
-      console.log(event.clientX, event.clientY);
-
       if (event.clientX < containerRect.left || event.clientX > containerRect.right - 9) {
         return;
       }

@@ -53,7 +53,7 @@ const useDragAndDrop = (
 
       const handleMouseUp = () => {
         isDragging.current = false;
-        console.log("handleMouseUp");
+
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
@@ -63,7 +63,6 @@ const useDragAndDrop = (
     };
 
     const handleMouseDownWithCheck = (e: MouseEvent) => {
-      console.log("handleMouseDownWithCheck");
       if (parentRef.current) {
         handleMouseDown(e);
       }

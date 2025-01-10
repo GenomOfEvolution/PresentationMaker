@@ -1,8 +1,10 @@
-import React, { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { Text } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
+import { dispatch } from "../../store/editor";
+import { updateText } from "../../store/functions/updateText";
 
 type TextObjectProps = {
   textObject: Text;
@@ -41,6 +43,8 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
   const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
   const { setCurrentElement } = useAppContext();
   const divRef = useRef<HTMLDivElement | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputValue, setInputValue] = useState(textObject.content);
 
   useEffect(() => {
     const divElement = divRef.current;
@@ -50,17 +54,55 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
         setCurrentElement(textObject);
       };
 
+      const handleDoubleClick = () => {
+        setIsEditing(true);
+      };
+
+      const handleClickOutside = (event: MouseEvent) => {
+        if (divElement && !divElement.contains(event.target as Node)) {
+          setIsEditing(false);
+          const id = textObject.id;
+          const text: string = inputValue!;
+          dispatch(updateText, { id, text });
+        }
+      };
+
       divElement.addEventListener("click", handleMouseDown);
+      divElement.addEventListener("dblclick", handleDoubleClick);
+      document.addEventListener("click", handleClickOutside);
 
       return () => {
         divElement.removeEventListener("click", handleMouseDown);
+        divElement.removeEventListener("dblclick", handleDoubleClick);
+        document.removeEventListener("click", handleClickOutside);
       };
     }
-  }, [handleSlideObjectClick, setCurrentElement, textObject]);
+  }, [handleSlideObjectClick, setCurrentElement, textObject, inputValue]);
 
   return (
     <div ref={divRef} style={textObjectStyles} id={textObject.id}>
-      <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
+      {isEditing ? (
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          autoFocus
+          style={{
+            width: "100%",
+            height: "100%",
+            border: "none",
+            background: "transparent",
+            fontSize: `${textObject.fontSize * scale}px`,
+            fontFamily: textObject.fontName,
+            color: textObject.fontColor,
+            outline: "none",
+            padding: 0,
+            margin: 0,
+          }}
+        />
+      ) : (
+        <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
+      )}
     </div>
   );
 };
