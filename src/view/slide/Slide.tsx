@@ -94,7 +94,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
       </div>
       {selection.selectedSlideObjectsId!.length > 0 && (
         <Selector
-          selectedObjectsId={selection.selectedSlideObjectsId}
+          selection={selection}
           objects={slide.elements}
           containerRef={containerRef}
           slideRef={slideRef}

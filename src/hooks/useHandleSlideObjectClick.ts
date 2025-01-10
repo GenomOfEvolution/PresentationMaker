@@ -7,8 +7,10 @@ import { useCallback } from "react";
 const useHandleSlideObjectClick = (slideObject: SlideObject, selection: SelectionType) => {
   const handleSlideObjectClick = useCallback(
     (event) => {
+      console.log("handleSlideObjectClick");
+      event.stopPropagation();
+      event.preventDefault();
       const newSel = { ...selection };
-
       if (event.ctrlKey || event.shiftKey) {
         if (!newSel.selectedSlideObjectsId?.includes(slideObject.id)) {
           newSel.selectedSlideObjectsId = [...(newSel.selectedSlideObjectsId || []), slideObject.id];

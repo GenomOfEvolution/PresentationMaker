@@ -1,0 +1,32 @@
+.selector {
+  position: absolute;
+  box-shadow: 0 0 0 2px #0b57d0;
+  box-sizing: border-box;
+  z-index: 0;
+}
+
+.handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background-color: #0b57d0;
+  border: 1px solid white;
+  z-index: 10;
+}
+
+.top-left,
+.top-right,
+.bottom-left,
+.bottom-right {
+  cursor: nwse-resize;
+}
+
+.top,
+.bottom {
+  cursor: ns-resize;
+}
+
+.left,
+.right {
+  cursor: ew-resize;
+}

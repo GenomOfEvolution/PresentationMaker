@@ -3,6 +3,7 @@ import { RefObject, useEffect, useRef } from "react";
 const useDragAndDrop = (
   childRef: RefObject<HTMLElement>,
   parentRef: RefObject<HTMLElement>,
+  selectedObjectsId: string[],
   setPosition: (pos: { x: number; y: number }) => void,
 ) => {
   const startPos = useRef({ x: 0, y: 0 });
@@ -12,9 +13,9 @@ const useDragAndDrop = (
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
-      if (!childRef.current || !parentRef.current) return;
       e.preventDefault();
       e.stopPropagation();
+      if (!childRef.current || !parentRef.current) return;
 
       const childRect = childRef.current.getBoundingClientRect();
       const parentRect = parentRef.current.getBoundingClientRect();
@@ -52,6 +53,7 @@ const useDragAndDrop = (
 
       const handleMouseUp = () => {
         isDragging.current = false;
+        console.log("handleMouseUp");
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
       };
@@ -61,15 +63,23 @@ const useDragAndDrop = (
     };
 
     const handleMouseDownWithCheck = (e: MouseEvent) => {
+      console.log("handleMouseDownWithCheck");
       if (parentRef.current) {
         handleMouseDown(e);
       }
     };
+    const selectedObjects: HTMLElement[] = selectedObjectsId.map((id) => {
+      return document.getElementById(id)!;
+    });
 
-    childRef.current?.addEventListener("mousedown", handleMouseDownWithCheck);
+    selectedObjects.forEach((obj) => {
+      obj.addEventListener("mousedown", handleMouseDownWithCheck);
+    });
 
     return () => {
-      childRef.current?.removeEventListener("mousedown", handleMouseDownWithCheck);
+      selectedObjects.forEach((obj) => {
+        obj.removeEventListener("mousedown", handleMouseDownWithCheck);
+      });
     };
   }, [childRef, parentRef, setPosition]);
 };

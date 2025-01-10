@@ -3,11 +3,11 @@ import { useCreateAppContext } from "./AppContext";
 
 const Context = React.createContext(null);
 
-export function useAppContext() {
+export const useAppContext = () => {
   const context = React.useContext(Context);
   if (!context) throw new Error("Use app context within provider!");
   return context;
-}
+};
 
 export const AppContextProvider = ({ children }) => {
   const context = useCreateAppContext();

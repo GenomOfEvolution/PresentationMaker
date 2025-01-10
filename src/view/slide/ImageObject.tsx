@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useEffect, useRef } from "react";
 import { Image } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
@@ -22,9 +22,11 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
+    border: selection.selectedSlideObjectsId?.includes(imageObject.id) ? "2px solid rgb(185, 210, 251)" : "none",
+    transform: "",
   };
 
-  imageObjectStyles.transform = "";
   if (imageObject.size.width < 0) {
     imageObjectStyles.transform += "scaleX(-1) ";
     imageObjectStyles.left = `${(imageObject.pos.x + imageObject.size.width) * scale}px`;
@@ -43,15 +45,26 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
 
   const handleSlideObjectClick = useHandleSlideObjectClick(imageObject, selection);
   const { setCurrentElement } = useAppContext();
+  const divRef = useRef<HTMLDivElement | null>(null);
 
-  return (
-    <div
-      style={imageObjectStyles}
-      onClick={(event) => {
+  useEffect(() => {
+    const divElement = divRef.current;
+    if (divElement) {
+      const handleMouseDown = (event: MouseEvent) => {
         handleSlideObjectClick(event);
         setCurrentElement(imageObject);
-      }}
-    >
+      };
+
+      divElement.addEventListener("click", handleMouseDown);
+
+      return () => {
+        divElement.removeEventListener("click", handleMouseDown);
+      };
+    }
+  }, [handleSlideObjectClick, setCurrentElement, imageObject]);
+
+  return (
+    <div ref={divRef} style={imageObjectStyles} id={imageObject.id}>
       <img style={contentStyles} src={imageObject.url} draggable="false" alt="Slide Object" />
     </div>
   );

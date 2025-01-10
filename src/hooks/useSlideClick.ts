@@ -45,6 +45,7 @@ const useSlideClick = (slides: SlideType[], selection: SelectionType) => {
       } else {
         curSel.selectedSlidesId = [slideId];
       }
+
       dispatch(setSelectionSlide, curSel);
     },
     [slides, selection],

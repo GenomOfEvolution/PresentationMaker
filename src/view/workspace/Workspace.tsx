@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { NewSlideCreator } from "../../components/newSlideCreator/NewSlideCreator.tsx";
 import { SlideType } from "../../types/Slide.ts";
 import { Slide } from "../slide/Slide.tsx";

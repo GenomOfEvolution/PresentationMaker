@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useEffect, useRef } from "react";
 import { Text } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
@@ -24,6 +24,8 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 1,
+    border: selection.selectedSlideObjectsId?.includes(textObject.id) ? "2px solid rgb(185, 210, 251)" : "none",
   };
 
   if (textObject.size.width < 0) {
@@ -38,15 +40,26 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
 
   const handleSlideObjectClick = useHandleSlideObjectClick(textObject, selection);
   const { setCurrentElement } = useAppContext();
+  const divRef = useRef<HTMLDivElement | null>(null);
 
-  return (
-    <div
-      style={textObjectStyles}
-      onClick={(event) => {
+  useEffect(() => {
+    const divElement = divRef.current;
+    if (divElement) {
+      const handleMouseDown = (event: MouseEvent) => {
         handleSlideObjectClick(event);
         setCurrentElement(textObject);
-      }}
-    >
+      };
+
+      divElement.addEventListener("click", handleMouseDown);
+
+      return () => {
+        divElement.removeEventListener("click", handleMouseDown);
+      };
+    }
+  }, [handleSlideObjectClick, setCurrentElement, textObject]);
+
+  return (
+    <div ref={divRef} style={textObjectStyles} id={textObject.id}>
       <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
     </div>
   );
