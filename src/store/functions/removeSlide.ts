@@ -20,6 +20,7 @@ const removeSlide = (editor: EditorType, slidesToRemove: string[] | SlideType[])
   }
 
   let newSel: SelectionType = editor.selection;
+  newSel.selectedSlideObjectsId = [];
   let firstToDeleteIndex: number = 0;
 
   // ищем на какой слайд встать после удаления

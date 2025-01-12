@@ -3,17 +3,7 @@ import { ImageButton } from "../../components/imageButton/ImageButton";
 import { Separator } from "../../components/separator/separator";
 import { DropDownButton } from "../../components/dropDownButton/DropDownButton";
 import { EditColorButton } from "../../components/editColorButton/EditColorButton";
-import {
-  Color,
-  createImageObject,
-  createTextObject,
-  Gradient,
-  GradientType,
-  Image,
-  LinearGradient,
-  ObjectType,
-  Text,
-} from "../../types/BaseTypes";
+import { Color, createImageObject, createTextObject, Gradient, Image, Text } from "../../types/BaseTypes";
 import { ScaleInputBox } from "../../components/scaleInputBox/ScaleInputBox";
 import { dispatch } from "../../store/editor";
 import { addNewSlide } from "../../store/functions/addSlide";

@@ -10,7 +10,6 @@ import { dispatch } from "../../store/editor.ts";
 import { updatePosition } from "../../store/functions/updatePosition.ts";
 import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
 import { updateSize } from "../../store/functions/updateSize.ts";
-import ColorPalette from "../../components/colorPalette/ColorPalette.tsx";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
