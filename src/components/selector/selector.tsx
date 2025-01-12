@@ -23,35 +23,53 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
   const [selectorSize, setSelectorSize] = useState<Size>({ width: 0, height: 0 });
 
   useEffect(() => {
-    if (selection.selectedSlideObjectsId!.length === 0 || !containerRef.current || !slideRef.current) return;
+    const updateSelector = () => {
+      if (selection.selectedSlideObjectsId!.length === 0 || !containerRef.current || !slideRef.current) return;
 
-    const bounds = containerRef.current.getBoundingClientRect();
-    const slideBounds = slideRef.current.getBoundingClientRect();
+      const bounds = containerRef.current.getBoundingClientRect();
+      const slideBounds = slideRef.current.getBoundingClientRect();
 
-    const slideOffset = { x: slideBounds.x - bounds.x, y: slideBounds.y - bounds.y };
+      const slideOffset = { x: slideBounds.x - bounds.x, y: slideBounds.y - bounds.y };
 
-    const selectedObjects: SlideObject[] = objects.filter((elem) =>
-      selection.selectedSlideObjectsId!.includes(elem.id),
-    );
+      const selectedObjects: SlideObject[] = objects.filter((elem) =>
+        selection.selectedSlideObjectsId!.includes(elem.id),
+      );
 
-    if (selectedObjects.length === 0) return;
+      if (selectedObjects.length === 0) return;
 
-    const minX = Math.min(
-      ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width < 0 ? elem.size.width : 0) + slideOffset.x + 1),
-    );
-    const minY = Math.min(
-      ...selectedObjects.map((elem) => elem.pos.y + (elem.size.height < 0 ? elem.size.height : 0) + slideOffset.y + 1),
-    );
-    const maxX = Math.max(
-      ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width > 0 ? elem.size.width : 0) + slideOffset.x + 1),
-    );
-    const maxY = Math.max(
-      ...selectedObjects.map((elem) => elem.pos.y + (elem.size.height > 0 ? elem.size.height : 0) + slideOffset.y + 1),
-    );
+      const minX = Math.min(
+        ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width < 0 ? elem.size.width : 0) + slideOffset.x + 1),
+      );
+      const minY = Math.min(
+        ...selectedObjects.map(
+          (elem) => elem.pos.y + (elem.size.height < 0 ? elem.size.height : 0) + slideOffset.y + 1,
+        ),
+      );
+      const maxX = Math.max(
+        ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width > 0 ? elem.size.width : 0) + slideOffset.x + 1),
+      );
+      const maxY = Math.max(
+        ...selectedObjects.map(
+          (elem) => elem.pos.y + (elem.size.height > 0 ? elem.size.height : 0) + slideOffset.y + 1,
+        ),
+      );
 
-    setSelectorPosition({ x: bounds.x + minX, y: bounds.y + minY });
-    setSelectorSize({ width: maxX - minX, height: maxY - minY });
-  }, [selection, objects, containerRef]);
+      setSelectorPosition({ x: bounds.x + minX, y: bounds.y + minY });
+      setSelectorSize({ width: maxX - minX, height: maxY - minY });
+    };
+
+    updateSelector();
+
+    const handleResize = () => {
+      updateSelector();
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [selection, objects, containerRef, slideRef]);
 
   useDragAndDrop(selectorRef, containerRef, selection.selectedSlideObjectsId!, (newPos) => {
     const deltaX = newPos.x - selectorPosition.x;
