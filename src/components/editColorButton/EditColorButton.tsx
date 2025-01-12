@@ -15,20 +15,22 @@ export type EditColorButtonProps = {
   title: string;
   needTransparent: boolean;
   needGradient: boolean;
+  onColorChange: (color: Color | Gradient) => void;
 };
 
 const EditColorButton = (props: EditColorButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showColorPalette, setShowColorPalette] = useState(true);
+  const [underlineColor, setUnderlineColor] = useState<CSSProperties>({});
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const underlineColor: CSSProperties = {};
-
-  if ((props.elemColor as Gradient).gradientType !== undefined) {
-    underlineColor.backgroundImage = gradientToCss(props.elemColor as Gradient);
-  } else {
-    underlineColor.backgroundColor = props.elemColor as Color;
-  }
+  useEffect(() => {
+    if ((props.elemColor as Gradient).gradientType !== undefined) {
+      setUnderlineColor({ backgroundImage: gradientToCss(props.elemColor as Gradient) });
+    } else {
+      setUnderlineColor({ backgroundColor: props.elemColor as Color });
+    }
+  }, [props.elemColor]);
 
   let icon;
   if (props.iconName === "colors") {
@@ -70,6 +72,18 @@ const EditColorButton = (props: EditColorButtonProps) => {
     };
   }, [isOpen]);
 
+  const handleColorSelect = (color: Color) => {
+    props.onColorChange(color);
+    setUnderlineColor({ backgroundColor: color });
+    setIsOpen(false);
+  };
+
+  const handleGradientSelect = (gradient: Gradient) => {
+    props.onColorChange(gradient);
+    setUnderlineColor({ backgroundImage: gradientToCss(gradient) });
+    setIsOpen(false);
+  };
+
   return (
     <div>
       <button className={styles.editColorButton} onClick={handleClick} title={props.title}>
@@ -96,11 +110,13 @@ const EditColorButton = (props: EditColorButtonProps) => {
           ) : (
             <></>
           )}
-          {!props.needGradient && <ColorPalette needTransparent={props.needTransparent} />}
+          {!props.needGradient && (
+            <ColorPalette needTransparent={props.needTransparent} onColorSelect={handleColorSelect} />
+          )}
           {showColorPalette && props.needGradient ? (
-            <ColorPalette needTransparent={props.needTransparent} />
+            <ColorPalette needTransparent={props.needTransparent} onColorSelect={handleColorSelect} />
           ) : (
-            props.needGradient && <GradientPalette />
+            props.needGradient && <GradientPalette onGradientSelect={handleGradientSelect} />
           )}
         </div>
       )}

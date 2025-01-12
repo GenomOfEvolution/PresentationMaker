@@ -4,8 +4,10 @@ import { Separator } from "../../components/separator/separator";
 import { DropDownButton } from "../../components/dropDownButton/DropDownButton";
 import { EditColorButton } from "../../components/editColorButton/EditColorButton";
 import {
+  Color,
   createImageObject,
   createTextObject,
+  Gradient,
   GradientType,
   Image,
   LinearGradient,
@@ -22,7 +24,10 @@ import { TextButton } from "../../components/textButton/TextButton";
 import { editBackground } from "../../store/functions/editBackground";
 import { renamePresentation } from "../../store/functions/renamePresentation";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
-import ColorPalette from "../../components/colorPalette/ColorPalette";
+import { updateBlockBgColor } from "../../store/functions/updateBlockBgColor";
+import { updateBlockBorderColor } from "../../store/functions/updateBlockBorderColor";
+import { updateFontColor } from "../../store/functions/updateFontColor";
+import { updateFontBgColor } from "../../store/functions/updateFontBgColor";
 
 type TopPanelProps = {
   title: string;
@@ -75,9 +80,10 @@ const BasePanel = ({ selection }: BasePanelProps) => {
 
 export type ImageEditPanelProps = {
   image: Image;
+  selection: SelectionType;
 };
 
-const ImageEditPanel = ({ image }: ImageEditPanelProps) => {
+const ImageEditPanel = ({ image, selection }: ImageEditPanelProps) => {
   return (
     <>
       <EditColorButton
@@ -86,9 +92,14 @@ const ImageEditPanel = ({ image }: ImageEditPanelProps) => {
         title="Цвет границ"
         elemColor={image.blockBorderColor}
         iconName="ink_marker"
-        onClick={() => {
-          console.log("Меняем цвет границы блока");
+        onColorChange={(color: Color | Gradient) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            const newColor = color;
+            dispatch(updateBlockBorderColor, { id, newColor });
+          });
         }}
+        onClick={() => {}}
       />
     </>
   );
@@ -96,9 +107,10 @@ const ImageEditPanel = ({ image }: ImageEditPanelProps) => {
 
 export type TextEditPanelProps = {
   text: Text;
+  selection: SelectionType;
 };
 
-const TextEditPanel = ({ text }: TextEditPanelProps) => {
+const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
   return (
     <>
       <EditColorButton
@@ -107,6 +119,13 @@ const TextEditPanel = ({ text }: TextEditPanelProps) => {
         title="Цвет заливки"
         elemColor={text.blockBgColor}
         iconName="colors"
+        onColorChange={(color: Color | Gradient) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            const newColor = color;
+            dispatch(updateBlockBgColor, { id, newColor });
+          });
+        }}
         onClick={() => {}}
       />
       <EditColorButton
@@ -115,9 +134,14 @@ const TextEditPanel = ({ text }: TextEditPanelProps) => {
         title="Цвет границ"
         elemColor={text.blockBorderColor}
         iconName="ink_marker"
-        onClick={() => {
-          console.log("Меняем цвет границы блока");
+        onColorChange={(color: Color | Gradient) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            const newColor = color;
+            dispatch(updateBlockBorderColor, { id, newColor });
+          });
         }}
+        onClick={() => {}}
       />
       <Separator />
       <DropDownButton
@@ -200,9 +224,14 @@ const TextEditPanel = ({ text }: TextEditPanelProps) => {
         title="Цвет текста"
         elemColor={text.fontColor}
         iconName="palette"
-        onClick={() => {
-          console.log("Меняем цвет текста");
+        onColorChange={(color: Color | Gradient) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            const newColor = color;
+            dispatch(updateFontColor, { id, newColor });
+          });
         }}
+        onClick={() => {}}
       />
       <EditColorButton
         needGradient={false}
@@ -210,9 +239,14 @@ const TextEditPanel = ({ text }: TextEditPanelProps) => {
         title="Цвет фона текста"
         elemColor={text.fontBgColor}
         iconName="ink_highlighter"
-        onClick={() => {
-          console.log("Меняем фона текста");
+        onColorChange={(color: Color | Gradient) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            const newColor = color;
+            dispatch(updateFontBgColor, { id, newColor });
+          });
         }}
+        onClick={() => {}}
       />
     </>
   );
@@ -239,7 +273,12 @@ const SlidePanel = () => {
   );
 };
 
-const ChoosePanel = (currentElement: Text | Image | null) => {
+export type ChoosePanelProps = {
+  currentElement: Text | Image | null;
+  selection: SelectionType;
+};
+
+const ChoosePanel = ({ currentElement, selection }: ChoosePanelProps) => {
   if (currentElement === null) {
     return (
       <>
@@ -249,13 +288,13 @@ const ChoosePanel = (currentElement: Text | Image | null) => {
   } else if ("fontFormatting" in currentElement) {
     return (
       <>
-        <TextEditPanel text={currentElement} />
+        <TextEditPanel text={currentElement} selection={selection} />
       </>
     );
   } else if ("source" in currentElement) {
     return (
       <>
-        <ImageEditPanel image={currentElement} />
+        <ImageEditPanel image={currentElement} selection={selection} />
       </>
     );
   }
@@ -274,7 +313,7 @@ const TopPanel = ({ title, selection }: TopPanelProps) => {
       <div className={styles.toolbar}>
         <div className={styles.toolbar__main}>
           <BasePanel selection={selection} />
-          {ChoosePanel(currentElement)}
+          {ChoosePanel({ currentElement, selection })}
         </div>
         <ImageButton
           title="Скрыть меню"

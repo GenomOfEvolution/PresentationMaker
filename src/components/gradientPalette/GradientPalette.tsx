@@ -136,11 +136,15 @@ const gradients: Gradient[] = [
   },
 ];
 
-const GradientPalette = () => {
+export type GradientPaletteProps = {
+  onGradientSelect: (gradient: Gradient) => void;
+};
+
+const GradientPalette = ({ onGradientSelect }: GradientPaletteProps) => {
   return (
     <div className={styles.palette}>
       {gradients.map((gradient, index) => (
-        <GradientCircle key={index} gradient={gradient} />
+        <GradientCircle key={index} gradient={gradient} onClick={() => onGradientSelect(gradient)} />
       ))}
     </div>
   );

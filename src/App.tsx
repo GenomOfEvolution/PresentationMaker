@@ -4,7 +4,9 @@ import { TopPanel } from "./view/topPanel/TopPanel";
 import { Workspace } from "./view/workspace/Workspace";
 import { EditorType } from "./store/editorType";
 import { AppContextProvider } from "./contexts/appContext/AppContextProvider";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { dispatch } from "./store/editor";
+import { setSelectionSlide } from "./store/functions/setSelectionSlide";
 
 type AppProps = {
   editor: EditorType;
@@ -15,7 +17,28 @@ const App = ({ editor }: AppProps) => {
     editor.selection.selectedSlidesId!.includes(slide.id),
   );
 
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (containerRef.current && event.target === containerRef.current) {
+        let newSel = editor.selection;
+        newSel.selectedSlideObjectsId = [];
+        dispatch(setSelectionSlide, newSel);
+      }
+    };
+
+    const divElement = containerRef.current;
+    if (divElement) {
+      divElement.addEventListener("click", handleClick);
+    }
+
+    return () => {
+      if (divElement) {
+        divElement.removeEventListener("click", handleClick);
+      }
+    };
+  }, []);
 
   return (
     <>

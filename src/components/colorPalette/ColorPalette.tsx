@@ -88,18 +88,19 @@ const colors: string[] = [
 
 export type ColorPaletteProps = {
   needTransparent: boolean;
+  onColorSelect: (color: string) => void;
 };
 
-const ColorPalette = ({ needTransparent }: ColorPaletteProps) => {
+const ColorPalette = ({ needTransparent, onColorSelect }: ColorPaletteProps) => {
   return (
     <>
-      <ColorAnother />
+      <ColorAnother onColorSelect={onColorSelect} />
       <div className={styles.palette}>
         {colors.map((color, index) => (
-          <ColorCircle key={index} color={color} />
+          <ColorCircle key={index} color={color} onClick={onColorSelect} />
         ))}
       </div>
-      {needTransparent ? <ColorTransparent /> : <></>}
+      {needTransparent ? <ColorTransparent onClick={onColorSelect} /> : <></>}
     </>
   );
 };

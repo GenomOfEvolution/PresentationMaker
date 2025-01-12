@@ -2,9 +2,10 @@ import styles from "./ColorCircle.module.css";
 
 interface ColorCircleProps {
   color: string;
+  onClick: (color: string) => void;
 }
 
-const ColorCircle = ({ color }: ColorCircleProps) => {
+const ColorCircle = ({ color, onClick }: ColorCircleProps) => {
   const isNearWhite = (color: string): boolean => {
     const bigint = parseInt(color.slice(1), 16);
     const r = (bigint >> 16) & 255;
@@ -15,7 +16,7 @@ const ColorCircle = ({ color }: ColorCircleProps) => {
   };
 
   const handleClick = () => {
-    console.log(color);
+    onClick(color);
   };
 
   return (

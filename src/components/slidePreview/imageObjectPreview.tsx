@@ -19,6 +19,7 @@ const ImageObjectPreview = ({ imageObject, scale }: ImageObjectPreviewProps) => 
     alignItems: "center",
     justifyContent: "center",
     pointerEvents: "none",
+    border: `2px solid ${imageObject.blockBorderColor}`,
   };
 
   if (imageObject.size.width < 0) {

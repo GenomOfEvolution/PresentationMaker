@@ -27,7 +27,10 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,
-    border: selection.selectedSlideObjectsId?.includes(textObject.id) ? "2px solid rgb(185, 210, 251)" : "none",
+    border: selection.selectedSlideObjectsId?.includes(textObject.id)
+      ? "2px solid rgb(185, 210, 251)"
+      : `2px solid ${textObject.blockBorderColor}`,
+    background: `${textObject.blockBgColor}`,
   };
 
   if (textObject.size.width < 0) {
@@ -101,7 +104,14 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
           }}
         />
       ) : (
-        <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale, userSelect: "none" }}>
+        <span
+          style={{
+            display: "block",
+            width: Math.abs(textObject.size.width) * scale,
+            userSelect: "none",
+            background: `${textObject.fontBgColor}`,
+          }}
+        >
           {textObject.content}
         </span>
       )}

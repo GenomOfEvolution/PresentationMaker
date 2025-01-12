@@ -1,13 +1,14 @@
 import { Gradient, gradientToCss } from "../../types/BaseTypes";
 import styles from "./GradientCircle.module.css";
 
-interface ColorCircleProps {
+interface GradientCircleProps {
   gradient: Gradient;
+  onClick: (gradient: Gradient) => void;
 }
 
-const GradientCircle = ({ gradient }: ColorCircleProps) => {
+const GradientCircle = ({ gradient, onClick }: GradientCircleProps) => {
   const handleClick = () => {
-    console.log(gradient);
+    onClick(gradient);
   };
 
   return (

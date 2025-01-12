@@ -23,7 +23,9 @@ const ImageObject = ({ imageObject, scale = 1, selection }: ImageObjectProps) =>
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,
-    border: selection.selectedSlideObjectsId?.includes(imageObject.id) ? "2px solid rgb(185, 210, 251)" : "none",
+    border: selection.selectedSlideObjectsId?.includes(imageObject.id)
+      ? "2px solid rgb(185, 210, 251)"
+      : `2px solid ${imageObject.blockBorderColor}`,
     transform: "",
   };
 

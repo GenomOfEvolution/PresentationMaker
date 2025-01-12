@@ -1,9 +1,17 @@
 import styles from "./ColorTransparent.module.css";
 
-const ColorTransparent = () => {
+interface ColorTransparentProps {
+  onClick: (color: string) => void;
+}
+
+const ColorTransparent = ({ onClick }: ColorTransparentProps) => {
+  const handleClick = () => {
+    onClick("transparent");
+  };
+
   let styleName: string = "material-icons format_color_reset";
   return (
-    <button onClick={() => console.log("transparent")} className={styles.buttonTransparent}>
+    <button onClick={handleClick} className={styles.buttonTransparent}>
       <i style={{ userSelect: "none" }} className={styleName}>
         format_color_reset
       </i>
