@@ -78,7 +78,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
         style={slideStyles}
         className={styles.slide + " " + className}
         id={slide.id}
-        onClick={handleContainerClick}
+        onMouseDown={handleContainerClick}
         ref={slideRef}
       >
         {slide.elements.map((slideObject) => {

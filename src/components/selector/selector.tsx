@@ -36,10 +36,18 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
 
     if (selectedObjects.length === 0) return;
 
-    const minX = Math.min(...selectedObjects.map((elem) => elem.pos.x + slideOffset.x + 1));
-    const minY = Math.min(...selectedObjects.map((elem) => elem.pos.y + slideOffset.y + 1));
-    const maxX = Math.max(...selectedObjects.map((elem) => elem.pos.x + elem.size.width + slideOffset.x + 1));
-    const maxY = Math.max(...selectedObjects.map((elem) => elem.pos.y + elem.size.height + slideOffset.y + 1));
+    const minX = Math.min(
+      ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width < 0 ? elem.size.width : 0) + slideOffset.x + 1),
+    );
+    const minY = Math.min(
+      ...selectedObjects.map((elem) => elem.pos.y + (elem.size.height < 0 ? elem.size.height : 0) + slideOffset.y + 1),
+    );
+    const maxX = Math.max(
+      ...selectedObjects.map((elem) => elem.pos.x + (elem.size.width > 0 ? elem.size.width : 0) + slideOffset.x + 1),
+    );
+    const maxY = Math.max(
+      ...selectedObjects.map((elem) => elem.pos.y + (elem.size.height > 0 ? elem.size.height : 0) + slideOffset.y + 1),
+    );
 
     setSelectorPosition({ x: bounds.x + minX, y: bounds.y + minY });
     setSelectorSize({ width: maxX - minX, height: maxY - minY });

@@ -66,25 +66,6 @@ const useResize = ({
       const deltaX = event.clientX - containerRect.left - startX;
       const deltaY = event.clientY - containerRect.top - startY;
 
-      // let calcWidth = selectorRect.width;
-      // let calcHeight = selectorRect.height;
-
-      // console.log(calcHeight, calcWidth);
-
-      // if (
-      //   deltaX + selectorRect.x < containerRect.x ||
-      //   deltaX + selectorRect.x + calcWidth > containerRect.x + containerRect.width - 15
-      // ) {
-      //   return;
-      // }
-
-      // if (
-      //   deltaY + selectorRect.y < containerRect.y ||
-      //   deltaY + selectorRect.y + calcHeight > containerRect.y + containerRect.height - 15
-      // ) {
-      //   return;
-      // }
-
       let newWidth = initialSize.current.width;
       let newHeight = initialSize.current.height;
 
@@ -109,15 +90,31 @@ const useResize = ({
 
       selectedObjectsId.forEach((id) => {
         const obj = objects.find((obj) => obj.id === id);
+        console.log(obj?.size);
         if (obj) {
+          if (obj.size.width < 0) {
+            newWidth *= -1;
+          }
+
+          if (obj.size.height < 0) {
+            newHeight *= -1;
+          }
+
           newSizes[id] = {
             width: direction.includes("right") || direction.includes("left") ? newWidth : obj.size.width,
             height: direction.includes("bottom") || direction.includes("top") ? newHeight : obj.size.height,
           };
 
           newPositions[id] = {
-            x: direction.includes("left") ? obj.pos.x + deltaX : obj.pos.x,
-            y: direction.includes("top") ? obj.pos.y + deltaY : obj.pos.y,
+            x:
+              (direction.includes("left") && obj.size.width > 0) || (direction.includes("right") && obj.size.width < 0)
+                ? obj.pos.x + deltaX
+                : obj.pos.x,
+            y:
+              (direction.includes("top") && obj.size.height > 0) ||
+              (direction.includes("bottom") && obj.size.height < 0)
+                ? obj.pos.y + deltaY
+                : obj.pos.y,
           };
         }
       });

@@ -101,7 +101,9 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
           }}
         />
       ) : (
-        <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale }}>{textObject.content}</span>
+        <span style={{ display: "block", width: Math.abs(textObject.size.width) * scale, userSelect: "none" }}>
+          {textObject.content}
+        </span>
       )}
     </div>
   );

@@ -7,7 +7,6 @@ const updateText = (editor: EditorType, { id, text }: { id: string; text: string
   newPres.slideCollection = newPres.slideCollection.map((slide) => {
     const newElements = slide.elements.map((element) => {
       if (element.id === id) {
-        console.log("FOUND", element, text);
         let elemAsText = element as Text;
         elemAsText.content = text;
 
