@@ -22,7 +22,7 @@ const useResize = ({
   const initialSize = useRef({ width: 0, height: 0 });
   const initialPos = useRef({ x: 0, y: 0 });
 
-  const handleMouseDownResize = (direction: string, event: React.MouseEvent) => {
+  const handleMouseDownResize = (direction: string, event: MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (!containerRef.current) return;

@@ -26,3 +26,31 @@
   width: 22px;
   height: 4px;
 }
+
+.dropdown {
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border-radius: 3px;
+  box-shadow: 0 0 7px 0 #b9b9b9;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.decideButton {
+  background-color: transparent;
+  border: none;
+  color: #444746;
+  font-size: 14px;
+  height: 25px;
+  margin-left: 15px;
+  margin-right: 15px;
+  font-family: "Roboto", sans-serif;
+}
+
+.decideButton.selected {
+  border-bottom: 2px solid rgb(244, 80, 0);
+}

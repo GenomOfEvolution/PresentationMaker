@@ -22,6 +22,7 @@ import { TextButton } from "../../components/textButton/TextButton";
 import { editBackground } from "../../store/functions/editBackground";
 import { renamePresentation } from "../../store/functions/renamePresentation";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
+import ColorPalette from "../../components/colorPalette/ColorPalette";
 
 type TopPanelProps = {
   title: string;
@@ -35,19 +36,25 @@ type BasePanelProps = {
 const BasePanel = ({ selection }: BasePanelProps) => {
   return (
     <>
-      <ImageButton onClick={() => dispatch(removeSlide, selection.selectedSlidesId as string[])} imageName="delete" />
-      <ImageButton onClick={() => dispatch(addNewSlide)} imageName="add" />
+      <ImageButton
+        title="Удалить слайд"
+        onClick={() => dispatch(removeSlide, selection.selectedSlidesId as string[])}
+        imageName="delete"
+      />
+      <ImageButton title="Новый слайд" onClick={() => dispatch(addNewSlide)} imageName="add" />
       <Separator />
-      <ImageButton onClick={() => console.log("undo")} imageName="undo" />
-      <ImageButton onClick={() => console.log("redo")} imageName="redo" />
+      <ImageButton title="Отменить" onClick={() => console.log("undo")} imageName="undo" />
+      <ImageButton title="Повторить" onClick={() => console.log("redo")} imageName="redo" />
       <Separator />
       <ImageButton
+        title="Текстовое поле"
         onClick={() =>
           dispatch(addSlideElem, createTextObject({ x: 50, y: 50 }, { width: 100, height: 50 }, "New text"))
         }
         imageName="text_fields"
       />
       <ImageButton
+        title="Вставить изображение"
         onClick={() =>
           dispatch(
             addSlideElem,
@@ -66,17 +73,18 @@ const BasePanel = ({ selection }: BasePanelProps) => {
   );
 };
 
-const ImageEditPanel = () => {
-  const testGradient: LinearGradient = {
-    colors: ["#ff0000", "#0000ff"],
-    gradientType: GradientType.linear,
-    linearDegrees: 23,
-  };
+export type ImageEditPanelProps = {
+  image: Image;
+};
+
+const ImageEditPanel = ({ image }: ImageEditPanelProps) => {
   return (
     <>
-      <EditColorButton elemColor={"#ff0000"} iconName="colors" onClick={() => {}} />
       <EditColorButton
-        elemColor={testGradient}
+        needGradient={false}
+        needTransparent={true}
+        title="Цвет границ"
+        elemColor={image.blockBorderColor}
         iconName="ink_marker"
         onClick={() => {
           console.log("Меняем цвет границы блока");
@@ -86,17 +94,26 @@ const ImageEditPanel = () => {
   );
 };
 
-const TextEditPanel = () => {
-  const testGradient: LinearGradient = {
-    colors: ["#ff0000", "#0000ff"],
-    gradientType: GradientType.linear,
-    linearDegrees: 23,
-  };
+export type TextEditPanelProps = {
+  text: Text;
+};
+
+const TextEditPanel = ({ text }: TextEditPanelProps) => {
   return (
     <>
-      <EditColorButton elemColor={"#ff0000"} iconName="colors" onClick={() => {}} />
       <EditColorButton
-        elemColor={testGradient}
+        needGradient={true}
+        needTransparent={true}
+        title="Цвет заливки"
+        elemColor={text.blockBgColor}
+        iconName="colors"
+        onClick={() => {}}
+      />
+      <EditColorButton
+        needGradient={false}
+        needTransparent={true}
+        title="Цвет границ"
+        elemColor={text.blockBorderColor}
         iconName="ink_marker"
         onClick={() => {
           console.log("Меняем цвет границы блока");
@@ -104,7 +121,7 @@ const TextEditPanel = () => {
       />
       <Separator />
       <DropDownButton
-        currentValue={"Arial"}
+        currentValue={text.fontName}
         elements={[
           {
             value: "Arial",
@@ -134,6 +151,7 @@ const TextEditPanel = () => {
       />
       <Separator />
       <ImageButton
+        title="Уменьшить размер шрифта"
         imageName="remove"
         onClick={() => {
           console.log("Уменьшаем размер шрифта");
@@ -141,13 +159,14 @@ const TextEditPanel = () => {
       />
 
       <ScaleInputBox
-        num="15"
+        num={text.fontSize + ""}
         onChange={() => {
           console.log("меняем размер шрифта");
         }}
       />
 
       <ImageButton
+        title="Увеличить размер шрифта"
         imageName="add"
         onClick={() => {
           console.log("Увеличиваем размер шрифта");
@@ -155,33 +174,42 @@ const TextEditPanel = () => {
       />
       <Separator />
       <ImageButton
+        title="Полужирный"
         imageName="format_bold"
         onClick={() => {
           console.log("Делаем полужирный текст");
         }}
       />
       <ImageButton
+        title="Курсив"
         imageName="format_italic"
         onClick={() => {
           console.log("Делаем курсивный текст");
         }}
       />
       <ImageButton
+        title="Подчеркнутый"
         imageName="format_underlined"
         onClick={() => {
           console.log("Делаем подчеркнутый текст");
         }}
       />
       <EditColorButton
-        elemColor={"transparent"}
+        needGradient={false}
+        needTransparent={false}
+        title="Цвет текста"
+        elemColor={text.fontColor}
         iconName="palette"
         onClick={() => {
           console.log("Меняем цвет текста");
         }}
       />
       <EditColorButton
-        elemColor={"#000000"}
-        iconName="ink_highlither"
+        needGradient={false}
+        needTransparent={true}
+        title="Цвет фона текста"
+        elemColor={text.fontBgColor}
+        iconName="ink_highlighter"
         onClick={() => {
           console.log("Меняем фона текста");
         }}
@@ -221,13 +249,13 @@ const ChoosePanel = (currentElement: Text | Image | null) => {
   } else if ("fontFormatting" in currentElement) {
     return (
       <>
-        <TextEditPanel />
+        <TextEditPanel text={currentElement} />
       </>
     );
   } else if ("source" in currentElement) {
     return (
       <>
-        <ImageEditPanel />
+        <ImageEditPanel image={currentElement} />
       </>
     );
   }
@@ -248,7 +276,11 @@ const TopPanel = ({ title, selection }: TopPanelProps) => {
           <BasePanel selection={selection} />
           {ChoosePanel(currentElement)}
         </div>
-        <ImageButton onClick={() => console.log("folding top panel")} imageName="keyboard_arrow_up" />
+        <ImageButton
+          title="Скрыть меню"
+          onClick={() => console.log("folding top panel")}
+          imageName="keyboard_arrow_up"
+        />
       </div>
     </div>
   );

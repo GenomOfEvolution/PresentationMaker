@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
 import { Image } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";

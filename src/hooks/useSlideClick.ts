@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { dispatch, getEditor } from "../store/editor.ts";
+import { dispatch } from "../store/editor.ts";
 import { setSelectionSlide } from "../store/functions/setSelectionSlide.ts";
 import { SelectionType } from "../types/Selection.ts";
 import { SlideType } from "../types/Slide.ts";
 
 const useSlideClick = (slides: SlideType[], selection: SelectionType) => {
   const onSlideClick = useCallback(
-    (slideId: string, selection: SelectionType, event) => {
+    (slideId: string, selection: SelectionType, event: React.MouseEvent) => {
       const curSel: SelectionType = selection;
       curSel.selectedSlideObjectsId = [];
 

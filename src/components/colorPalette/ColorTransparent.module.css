@@ -1,0 +1,24 @@
+.buttonTransparent {
+  margin-top: 10px;
+  min-width: 220px;
+  min-height: 40px;
+  cursor: pointer;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444746;
+  border-radius: 11px;
+  border: 1px #d9d9d9 solid;
+}
+
+.buttonTransparent__Text {
+  display: flex;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.buttonTransparent:hover {
+  background-color: #e2e7ea;
+}

@@ -1,0 +1,12 @@
+.gradientCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.circle:hover {
+  box-shadow: 0 0 3px 2px #d9d9d9;
+}

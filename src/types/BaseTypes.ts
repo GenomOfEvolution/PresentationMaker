@@ -101,6 +101,8 @@ export type SlideObject = {
   pos: Point;
   size: Size;
   objectType: ObjectType;
+  blockBgColor: Gradient | Color;
+  blockBorderColor: Gradient | Color;
 };
 
 export const createSlideObject = (pos: Point, size: Size): SlideObject => {
@@ -109,6 +111,8 @@ export const createSlideObject = (pos: Point, size: Size): SlideObject => {
     pos: pos,
     size: size,
     objectType: ObjectType.Text,
+    blockBgColor: "transparent",
+    blockBorderColor: "transparent",
   };
 };
 
@@ -128,6 +132,8 @@ export const createImageObject = (pos: Point, size: Size, url: string, source: I
     objectType: ObjectType.Image,
     url: url,
     source: source,
+    blockBgColor: "transparent",
+    blockBorderColor: "transparent",
   };
 };
 
@@ -143,6 +149,8 @@ export const createTextObject = (pos: Point, size: Size, val: string): Text => {
     fontColor: "#000000",
     fontBgColor: "transparent",
     content: val,
+    blockBgColor: "transparent",
+    blockBorderColor: "transparent",
   };
 };
 

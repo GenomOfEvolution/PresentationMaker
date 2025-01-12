@@ -84,7 +84,7 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
       {isEditing ? (
         <input
           type="text"
-          value={inputValue}
+          value={inputValue!}
           onChange={(e) => setInputValue(e.target.value)}
           autoFocus
           style={{

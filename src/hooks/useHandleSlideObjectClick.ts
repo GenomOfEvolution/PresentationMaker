@@ -6,7 +6,7 @@ import { useCallback } from "react";
 
 const useHandleSlideObjectClick = (slideObject: SlideObject, selection: SelectionType) => {
   const handleSlideObjectClick = useCallback(
-    (event) => {
+    (event: MouseEvent) => {
       event.stopPropagation();
       event.preventDefault();
       const newSel = { ...selection };

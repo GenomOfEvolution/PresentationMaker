@@ -1,0 +1,7 @@
+.palette {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 4px;
+  padding: 1px;
+  grid-auto-rows: 20px;
+}
