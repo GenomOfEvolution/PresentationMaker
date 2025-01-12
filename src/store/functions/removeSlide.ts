@@ -41,7 +41,7 @@ const removeSlide = (editor: EditorType, slidesToRemove: string[] | SlideType[])
     firstToDeleteIndex = 0;
     newSel.selectedSlidesId = null;
   } else {
-    newSel.selectedSlidesId![0] = newPres.slideCollection[firstToDeleteIndex].id;
+    newSel.selectedSlidesId = [newPres.slideCollection[firstToDeleteIndex].id];
   }
 
   return {
