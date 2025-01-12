@@ -110,6 +110,7 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
             width: Math.abs(textObject.size.width) * scale,
             userSelect: "none",
             background: `${textObject.fontBgColor}`,
+            fontFamily: textObject.fontName,
           }}
         >
           {textObject.content}

@@ -1,15 +1,19 @@
-import { v4 } from "uuid";
+import { useState, useEffect, useRef } from "react";
 import styles from "./DropDownButton.module.css";
 import imgBtnStyles from "../imageButton/ImageButton.module.css";
 
 export type DropDownElementProps = {
   value: string;
-  onClick: () => void;
+  onClick: (value: string) => void;
 };
 
 const DropDownElement = (props: DropDownElementProps) => {
   return (
-    <button className={styles.dropdown__element} onClick={props.onClick} style={{ fontFamily: props.value }}>
+    <button
+      className={styles.dropdown__element}
+      onClick={() => props.onClick(props.value)}
+      style={{ fontFamily: props.value }}
+    >
       {props.value}
     </button>
   );
@@ -18,26 +22,61 @@ const DropDownElement = (props: DropDownElementProps) => {
 export type DropDownButtonProps = {
   elements: DropDownElementProps[];
   currentValue: string;
+  onSelect: (value: string) => void;
 };
 
 const DropDownButton = (props: DropDownButtonProps) => {
-  const dropDownId: string = v4();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("click", handleClickOutside);
+    } else {
+      document.removeEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleElementClick = (value: string) => {
+    props.onSelect(value);
+    setIsOpen(false);
+  };
+
   return (
     <div className={styles.dropdown}>
-      <input id={dropDownId} type="checkbox" className={styles.dropdown__input} />
-      <button className={imgBtnStyles.ImageButton}>
-        <label htmlFor={dropDownId} className={styles.dropdown__text}>
-          {props.currentValue}
-        </label>
-        <label htmlFor={dropDownId} className="material-icons" style={{ cursor: "pointer" }}>
+      <button ref={buttonRef} className={imgBtnStyles.ImageButton} onClick={handleToggle} title="Select Font">
+        <span className={styles.dropdown__text}>{props.currentValue}</span>
+        <span className="material-icons" style={{ cursor: "pointer", transform: isOpen ? "scaleY(-1)" : "" }}>
           arrow_drop_down
-        </label>
+        </span>
       </button>
-      <div className={styles.dropdown__content}>
-        {props.elements.map((elem, index) => (
-          <DropDownElement key={index} value={elem.value} onClick={elem.onClick} />
-        ))}
-      </div>
+      {isOpen && (
+        <div ref={dropdownRef} className={styles.dropdown__content}>
+          {props.elements.map((elem, index) => (
+            <DropDownElement key={index} value={elem.value} onClick={handleElementClick} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

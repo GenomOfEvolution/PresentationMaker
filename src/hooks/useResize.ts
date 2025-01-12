@@ -90,7 +90,7 @@ const useResize = ({
 
       selectedObjectsId.forEach((id) => {
         const obj = objects.find((obj) => obj.id === id);
-        console.log(obj?.size);
+
         if (obj) {
           if (obj.size.width < 0) {
             newWidth *= -1;

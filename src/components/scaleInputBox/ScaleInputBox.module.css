@@ -12,8 +12,23 @@
 
   text-align: center;
   background-color: transparent;
+  appearance: text;
+  -moz-appearance: textfield;
 }
 
 .scaleInputBox:hover {
   background-color: #e2e7ea;
+}
+
+.scaleInputBox::-webkit-outer-spin-button,
+.scaleInputBox::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.scaleInputBoxContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }

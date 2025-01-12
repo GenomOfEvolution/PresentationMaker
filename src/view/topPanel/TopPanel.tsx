@@ -18,6 +18,8 @@ import { updateBlockBgColor } from "../../store/functions/updateBlockBgColor";
 import { updateBlockBorderColor } from "../../store/functions/updateBlockBorderColor";
 import { updateFontColor } from "../../store/functions/updateFontColor";
 import { updateFontBgColor } from "../../store/functions/updateFontBgColor";
+import { updateFontName } from "../../store/functions/updateFontName";
+import { updateFontSize } from "../../store/functions/updateFontSize";
 
 type TopPanelProps = {
   title: string;
@@ -135,57 +137,44 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
       />
       <Separator />
       <DropDownButton
+        onSelect={(value: string) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            dispatch(updateFontName, { id: id, newFontName: value });
+          });
+        }}
         currentValue={text.fontName}
         elements={[
           {
             value: "Arial",
-            onClick: () => {
-              console.log("Устанавливаем шрифт Arial");
-            },
+            onClick: () => {},
           },
           {
             value: "Lobster",
-            onClick: () => {
-              console.log("Устанавливаем шрифт Lobster");
-            },
+            onClick: () => {},
           },
           {
             value: "Oswald",
-            onClick: () => {
-              console.log("Устанавливаем шрифт Oswald");
-            },
+            onClick: () => {},
           },
           {
             value: "Nunito",
-            onClick: () => {
-              console.log("Устанавливаем шрифт Nunito");
-            },
+            onClick: () => {},
           },
         ]}
       />
       <Separator />
-      <ImageButton
-        title="Уменьшить размер шрифта"
-        imageName="remove"
-        onClick={() => {
-          console.log("Уменьшаем размер шрифта");
-        }}
-      />
 
       <ScaleInputBox
-        num={text.fontSize + ""}
-        onChange={() => {
-          console.log("меняем размер шрифта");
+        initialValue={text.fontSize}
+        onChange={(newValue) => {
+          selection.selectedSlideObjectsId?.forEach((elem) => {
+            const id = elem;
+            dispatch(updateFontSize, { id: id, newFontSize: newValue });
+          });
         }}
       />
 
-      <ImageButton
-        title="Увеличить размер шрифта"
-        imageName="add"
-        onClick={() => {
-          console.log("Увеличиваем размер шрифта");
-        }}
-      />
       <Separator />
       <ImageButton
         title="Полужирный"
