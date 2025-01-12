@@ -13,7 +13,7 @@
   text-align: center;
   background-color: transparent;
   appearance: text;
-  -moz-appearance: textfield;
+  -moz-appearance: text;
 }
 
 .scaleInputBox:hover {

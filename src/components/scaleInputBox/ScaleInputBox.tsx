@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ImageButton } from "../imageButton/ImageButton";
 import styles from "./ScaleInputBox.module.css";
 
@@ -9,6 +9,10 @@ export type ScaleInputBoxProps = {
 
 const ScaleInputBox = (props: ScaleInputBoxProps) => {
   const [value, setValue] = useState(props.initialValue);
+
+  useEffect(() => {
+    setValue(props.initialValue);
+  }, [props.initialValue]);
 
   const handleDecrease = () => {
     const newValue = Math.max(value - 1, 1);
