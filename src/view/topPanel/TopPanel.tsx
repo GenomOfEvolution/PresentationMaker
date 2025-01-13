@@ -20,6 +20,7 @@ import { updateFontColor } from "../../store/functions/updateFontColor";
 import { updateFontBgColor } from "../../store/functions/updateFontBgColor";
 import { updateFontName } from "../../store/functions/updateFontName";
 import { updateFontSize } from "../../store/functions/updateFontSize";
+import ImageButtonWithModal from "../../components/imageButton/ImageButtonWithModal";
 
 type TopPanelProps = {
   title: string;
@@ -50,21 +51,7 @@ const BasePanel = ({ selection }: BasePanelProps) => {
         }
         imageName="text_fields"
       />
-      <ImageButton
-        title="Вставить изображение"
-        onClick={() =>
-          dispatch(
-            addSlideElem,
-            createImageObject(
-              { x: 50, y: 50 },
-              { width: 100, height: 50 },
-              "https://dota2.ru/img/heroes/pudge/portrait.jpg",
-              "URL",
-            ),
-          )
-        }
-        imageName="image"
-      />
+      <ImageButtonWithModal title="Вставить изображение" imageName="image" />
       <Separator />
     </>
   );
