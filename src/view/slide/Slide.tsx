@@ -10,6 +10,7 @@ import { dispatch } from "../../store/editor.ts";
 import { updatePosition } from "../../store/functions/updatePosition.ts";
 import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
 import { updateSize } from "../../store/functions/updateSize.ts";
+import { useAppContext } from "../../contexts/appContext/AppContextProvider.tsx";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -47,6 +48,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
       break;
   }
 
+  const { setCurrentElement } = useAppContext();
   useEffect(() => {
     if (Object.keys(positions).length > 0) {
       Object.keys(positions).forEach((id) => {
@@ -67,6 +69,7 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
         ...selection,
         selectedSlideObjectsId: [],
       });
+      setCurrentElement(null);
     }
   };
 

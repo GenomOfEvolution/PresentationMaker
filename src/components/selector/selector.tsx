@@ -7,6 +7,7 @@ import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 import { setSelectionSlide } from "../../store/functions/setSelectionSlide";
 import { dispatch } from "../../store/editor";
 import { SelectionType } from "../../types/Selection";
+import { removeSlideElem } from "../../store/functions/removeSlideElement";
 
 type SelectorProps = {
   selection: SelectionType;
@@ -205,12 +206,32 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
   });
 
   const { setCurrentElement } = useAppContext();
+
   const handleOnClick = () => {
+    console.log("Deleting selected elements:", selectedObjectsId);
     setCurrentElement(null);
     let newSel: SelectionType = selection;
     newSel.selectedSlideObjectsId = [];
     dispatch(setSelectionSlide, newSel);
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Delete") {
+      console.log("Deleting selected elements:", selectedObjectsId);
+      dispatch(removeSlideElem, { ...selection, selectedObjectsId: selectedObjectsId });
+      setCurrentElement(null);
+      let newSel: SelectionType = selection;
+      newSel.selectedSlideObjectsId = [];
+      dispatch(setSelectionSlide, newSel);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selection, setCurrentElement, dispatch]);
 
   return (
     <>
