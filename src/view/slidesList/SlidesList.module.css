@@ -11,11 +11,16 @@
   max-height: fit-content;
 
   user-select: none;
+
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .item {
   margin: 10px;
   border-radius: 10px;
+  width: 200px;
+  height: 112px;
   overflow: hidden;
 }
 
