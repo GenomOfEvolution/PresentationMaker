@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ImageButton, ImageButtonProps } from "./ImageButton";
 import ModalWindow from "../modalWindow/ModalWindow";
 import { dispatch } from "../../store/editor";
-import { editBackground } from "../../store/functions/editBackground";
 import { v4 } from "uuid";
 import type { Image } from "../../types/BaseTypes";
 import { ObjectType } from "../../types/BaseTypes";

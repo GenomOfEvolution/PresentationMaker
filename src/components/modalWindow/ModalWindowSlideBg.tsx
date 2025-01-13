@@ -7,7 +7,6 @@ import { EditColorButton } from "../editColorButton/EditColorButton";
 import styles from "./ModalWindow.module.css";
 import { v4 } from "uuid";
 
-// Импорт типа Image с использованием import type
 import type { Image } from "../../types/BaseTypes";
 
 type ModalWindowSlideBgProps = {

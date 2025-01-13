@@ -11,7 +11,6 @@ import { removeSlide } from "../../store/functions/removeSlide";
 import { SelectionType } from "../../types/Selection";
 import { addSlideElem } from "../../store/functions/addSlideElement";
 import { TextButton } from "../../components/textButton/TextButton";
-import { editBackground } from "../../store/functions/editBackground";
 import { renamePresentation } from "../../store/functions/renamePresentation";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
 import { updateBlockBgColor } from "../../store/functions/updateBlockBgColor";
@@ -21,6 +20,8 @@ import { updateFontBgColor } from "../../store/functions/updateFontBgColor";
 import { updateFontName } from "../../store/functions/updateFontName";
 import { updateFontSize } from "../../store/functions/updateFontSize";
 import ImageButtonWithModal from "../../components/imageButton/ImageButtonWithModal";
+import ExportImageButton from "../../components/exportButton/ExportButton.tsx";
+import ImportButton from "../../components/importButton/ImportButton.tsx";
 
 type TopPanelProps = {
   title: string;
@@ -31,9 +32,17 @@ type BasePanelProps = {
   selection: SelectionType;
 };
 
+const handleImport = (data: any) => {
+  localStorage.setItem("editorState", JSON.stringify(data));
+  alert("Документ импортирован.");
+};
+
 const BasePanel = ({ selection }: BasePanelProps) => {
   return (
     <>
+      <ImportButton onImport={handleImport} />
+      <ExportImageButton />
+
       <ImageButton
         title="Удалить слайд"
         onClick={() => dispatch(removeSlide, selection.selectedSlidesId as string[])}

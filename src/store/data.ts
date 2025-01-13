@@ -53,10 +53,13 @@ for (let i = 0; i < 5; i++) {
 
 selection.selectedSlidesId = [presentation.slideCollection[0].id];
 
-const editor: EditorType = {
-  presentation,
-  selection: selection,
-  workingWith: "workspace",
-};
+const savedEditorState = localStorage.getItem("editorState");
+const editor: EditorType = savedEditorState
+  ? JSON.parse(savedEditorState)
+  : {
+      presentation,
+      selection: selection,
+      workingWith: "workspace",
+    };
 
 export { editor };
