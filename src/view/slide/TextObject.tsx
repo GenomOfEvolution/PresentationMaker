@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
-import { Text } from "../../types/BaseTypes";
+import { Color, gradientToCss, Text } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
@@ -30,8 +30,13 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
     border: selection.selectedSlideObjectsId?.includes(textObject.id)
       ? "2px solid rgb(185, 210, 251)"
       : `2px solid ${textObject.blockBorderColor}`,
-    background: `${textObject.blockBgColor}`,
   };
+
+  if (typeof textObject.blockBgColor === "string") {
+    textObjectStyles.background = textObject.blockBgColor as Color;
+  } else {
+    textObjectStyles.background = gradientToCss(textObject.blockBgColor);
+  }
 
   if (textObject.size.width < 0) {
     textObjectStyles.transform = "scaleX(-1)";
