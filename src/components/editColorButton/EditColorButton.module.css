@@ -38,6 +38,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-width: 210px;
 }
 
 .decideButton {
@@ -49,6 +50,7 @@
   margin-left: 15px;
   margin-right: 15px;
   font-family: "Roboto", sans-serif;
+  min-width: fit-content;
 }
 
 .decideButton.selected {

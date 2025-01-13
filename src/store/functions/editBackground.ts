@@ -10,12 +10,12 @@ const editBackground = (editor: EditorType, newBg: Image | Color | Gradient): Ed
   );
 
   for (let i = 0; i < editBgIndicies.length; i++) {
-    if ("gradientType" in (newBg as Gradient)) {
-      newPres.slideCollection[editBgIndicies[i]].bg = createBgColor(newBg as Gradient);
-    } else if ("source" in (newBg as Image)) {
-      newPres.slideCollection[editBgIndicies[i]].bg = createBgImage(newBg as Image);
-    } else {
+    if (typeof newBg === "string") {
       newPres.slideCollection[editBgIndicies[i]].bg = createBgColor(newBg as Color);
+    } else if ("gradientType" in newBg) {
+      newPres.slideCollection[editBgIndicies[i]].bg = createBgColor(newBg as Gradient);
+    } else if ("source" in newBg) {
+      newPres.slideCollection[editBgIndicies[i]].bg = createBgImage(newBg as Image);
     }
   }
 

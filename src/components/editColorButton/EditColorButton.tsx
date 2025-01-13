@@ -93,7 +93,7 @@ const EditColorButton = (props: EditColorButtonProps) => {
       {isOpen && (
         <div ref={dropdownRef} className={styles.dropdown}>
           {props.needGradient ? (
-            <div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
               <button
                 className={`${styles.decideButton} ${showColorPalette ? styles.selected : ""}`}
                 onClick={() => setShowColorPalette(true)}

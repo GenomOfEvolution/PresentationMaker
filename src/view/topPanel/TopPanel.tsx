@@ -231,23 +231,14 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
   );
 };
 
-const SlidePanel = () => {
+export type SlidePanelProps = {
+  selection: SelectionType;
+};
+
+const SlidePanel = ({ selection }: SlidePanelProps) => {
   return (
     <>
-      <TextButton
-        onClick={() =>
-          dispatch(
-            editBackground,
-            createImageObject(
-              { x: 50, y: 50 },
-              { width: 100, height: 50 },
-              "https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/66b3ea5489be478613512121_43.png",
-              "URL",
-            ),
-          )
-        }
-        text="Фон"
-      />
+      <TextButton selection={selection} onClick={() => {}} text="Фон" />
     </>
   );
 };
@@ -261,7 +252,7 @@ const ChoosePanel = ({ currentElement, selection }: ChoosePanelProps) => {
   if (currentElement === null) {
     return (
       <>
-        <SlidePanel />
+        <SlidePanel selection={selection} />
       </>
     );
   } else if ("fontFormatting" in currentElement) {
