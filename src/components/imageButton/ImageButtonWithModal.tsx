@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ImageButton, ImageButtonProps } from "./ImageButton";
 import ModalWindow from "../modalWindow/ModalWindow";
-import { dispatch } from "../../store/editor";
 import { v4 } from "uuid";
 import type { Image } from "../../types/BaseTypes";
 import { ObjectType } from "../../types/BaseTypes";
-import { addSlideElem } from "../../store/functions/addSlideElement";
+import { useAppActions } from "../../hooks/useAppActions";
 
 type ImageButtonWithModalProps = Omit<ImageButtonProps, "onClick">;
 
 const ImageButtonWithModal = (props: ImageButtonWithModalProps) => {
+  const { addSlideElem } = useAppActions();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
@@ -34,7 +34,7 @@ const ImageButtonWithModal = (props: ImageButtonWithModalProps) => {
           blockBorderColor: "transparent",
           source: "Base64",
         };
-        dispatch(addSlideElem, image);
+        addSlideElem(image);
         setIsModalOpen(false);
       };
       reader.readAsDataURL(imageFile);
@@ -49,7 +49,7 @@ const ImageButtonWithModal = (props: ImageButtonWithModalProps) => {
         blockBgColor: "transparent",
         blockBorderColor: "transparent",
       };
-      dispatch(addSlideElem, image);
+      addSlideElem(image);
       setIsModalOpen(false);
     } else {
       setIsModalOpen(false);

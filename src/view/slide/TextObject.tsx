@@ -3,8 +3,7 @@ import { Color, gradientToCss, Text } from "../../types/BaseTypes";
 import useHandleSlideObjectClick from "../../hooks/useHandleSlideObjectClick";
 import { SelectionType } from "../../types/Selection";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
-import { dispatch } from "../../store/editor";
-import { updateText } from "../../store/functions/updateText";
+import { useAppActions } from "../../hooks/useAppActions";
 
 type TextObjectProps = {
   textObject: Text;
@@ -13,6 +12,7 @@ type TextObjectProps = {
 };
 
 const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
+  const { updateText } = useAppActions();
   const textObjectStyles: CSSProperties = {
     position: "absolute",
     top: `${textObject.pos.y * scale}px`,
@@ -71,7 +71,7 @@ const TextObject = ({ textObject, scale = 1, selection }: TextObjectProps) => {
           setIsEditing(false);
           const id = textObject.id;
           const text: string = inputValue!;
-          dispatch(updateText, { id, text });
+          updateText(id, text);
         }
       };
 

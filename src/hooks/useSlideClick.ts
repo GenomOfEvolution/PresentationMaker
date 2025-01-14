@@ -1,10 +1,11 @@
 import { useCallback } from "react";
-import { dispatch } from "../store/editor.ts";
-import { setSelectionSlide } from "../store/functions/setSelectionSlide.ts";
 import { SelectionType } from "../types/Selection.ts";
 import { SlideType } from "../types/Slide.ts";
+import { useAppActions } from "./useAppActions.ts";
 
 const useSlideClick = (slides: SlideType[], selection: SelectionType) => {
+  const { setSelectionSlide } = useAppActions();
+
   const onSlideClick = useCallback(
     (slideId: string, selection: SelectionType, event: React.MouseEvent) => {
       const curSel: SelectionType = selection;
@@ -46,7 +47,7 @@ const useSlideClick = (slides: SlideType[], selection: SelectionType) => {
         curSel.selectedSlidesId = [slideId];
       }
 
-      dispatch(setSelectionSlide, curSel);
+      setSelectionSlide(curSel);
     },
     [slides, selection],
   );

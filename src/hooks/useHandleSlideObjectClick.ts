@@ -1,10 +1,10 @@
 import { SelectionType } from "../types/Selection";
-import { dispatch } from "../store/editor";
-import { setSelectionSlide } from "../store/functions/setSelectionSlide";
 import { SlideObject } from "../types/BaseTypes";
 import { useCallback } from "react";
+import { useAppActions } from "./useAppActions";
 
 const useHandleSlideObjectClick = (slideObject: SlideObject, selection: SelectionType) => {
+  const { setSelectionSlide } = useAppActions();
   const handleSlideObjectClick = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
@@ -21,7 +21,7 @@ const useHandleSlideObjectClick = (slideObject: SlideObject, selection: Selectio
       }
 
       newSel.selectedSlidesId = newSel.selectedSlidesId || [newSel.selectedSlidesId![0]];
-      dispatch(setSelectionSlide, newSel);
+      setSelectionSlide(newSel);
     },
     [slideObject, selection],
   );

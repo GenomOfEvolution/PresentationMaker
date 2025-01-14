@@ -4,10 +4,8 @@ import useDragAndDrop from "../../hooks/useDragAndDrop";
 import useResize from "../../hooks/useResize";
 import styles from "./selector.module.css";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
-import { setSelectionSlide } from "../../store/functions/setSelectionSlide";
-import { dispatch } from "../../store/editor";
 import { SelectionType } from "../../types/Selection";
-import { removeSlideElem } from "../../store/functions/removeSlideElement";
+import { useAppActions } from "../../hooks/useAppActions";
 
 type SelectorProps = {
   selection: SelectionType;
@@ -19,6 +17,7 @@ type SelectorProps = {
 };
 
 const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePositions, onUpdateSizes }: SelectorProps) => {
+  const { setSelectionSlide, removeSlideElem } = useAppActions();
   const selectorRef = useRef<HTMLDivElement>(null);
   const [selectorPosition, setSelectorPosition] = useState<Point>({ x: 0, y: 0 });
   const [selectorSize, setSelectorSize] = useState<Size>({ width: 0, height: 0 });
@@ -211,16 +210,16 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
     setCurrentElement(null);
     let newSel: SelectionType = selection;
     newSel.selectedSlideObjectsId = [];
-    dispatch(setSelectionSlide, newSel);
+    setSelectionSlide(newSel);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Delete") {
-      dispatch(removeSlideElem, { ...selection, selectedObjectsId: selectedObjectsId });
+      removeSlideElem({ ...selection, selectedSlideObjectsId: selectedObjectsId });
       setCurrentElement(null);
       let newSel: SelectionType = selection;
       newSel.selectedSlideObjectsId = [];
-      dispatch(setSelectionSlide, newSel);
+      setSelectionSlide(newSel);
     }
   };
 
@@ -229,7 +228,7 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selection, setCurrentElement, dispatch]);
+  }, [selection, setCurrentElement]);
 
   return (
     <>

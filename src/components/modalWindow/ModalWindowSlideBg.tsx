@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { dispatch } from "../../store/editor";
-import { editBackground } from "../../store/functions/editBackground";
 import { Color, Gradient, ObjectType } from "../../types/BaseTypes";
 import { SelectionType } from "../../types/Selection";
 import { EditColorButton } from "../editColorButton/EditColorButton";
 import styles from "./ModalWindow.module.css";
 import { v4 } from "uuid";
-
 import type { Image } from "../../types/BaseTypes";
+import { useAppActions } from "../../hooks/useAppActions";
 
 type ModalWindowSlideBgProps = {
   selection: SelectionType;
@@ -16,6 +14,7 @@ type ModalWindowSlideBgProps = {
 };
 
 const ModalWindowSlideBg = ({ selection, onClose, onConfirm }: ModalWindowSlideBgProps) => {
+  const { editBackground } = useAppActions();
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +56,7 @@ const ModalWindowSlideBg = ({ selection, onClose, onConfirm }: ModalWindowSlideB
           blockBorderColor: "transparent",
           source: "Base64",
         };
-        dispatch(editBackground, image);
+        editBackground(image);
         onConfirm();
       };
       reader.readAsDataURL(imageFile);
@@ -74,7 +73,7 @@ const ModalWindowSlideBg = ({ selection, onClose, onConfirm }: ModalWindowSlideB
             blockBgColor: "transparent",
             blockBorderColor: "transparent",
           };
-          dispatch(editBackground, image);
+          editBackground(image);
           onConfirm();
         } else {
           setError("Неверная ссылка на изображение.");
@@ -105,7 +104,7 @@ const ModalWindowSlideBg = ({ selection, onClose, onConfirm }: ModalWindowSlideB
               elemColor={"transparent"}
               iconName="colors"
               onColorChange={(color: Color | Gradient) => {
-                dispatch(editBackground, color);
+                editBackground(color);
               }}
               onClick={() => {}}
             />

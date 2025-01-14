@@ -3,25 +3,15 @@ import { ImageButton } from "../../components/imageButton/ImageButton";
 import { Separator } from "../../components/separator/separator";
 import { DropDownButton } from "../../components/dropDownButton/DropDownButton";
 import { EditColorButton } from "../../components/editColorButton/EditColorButton";
-import { Color, createImageObject, createTextObject, Gradient, Image, Text } from "../../types/BaseTypes";
+import { Color, createTextObject, Gradient, Image, Text } from "../../types/BaseTypes";
 import { ScaleInputBox } from "../../components/scaleInputBox/ScaleInputBox";
-import { dispatch } from "../../store/editor";
-import { addNewSlide } from "../../store/functions/addSlide";
-import { removeSlide } from "../../store/functions/removeSlide";
 import { SelectionType } from "../../types/Selection";
-import { addSlideElem } from "../../store/functions/addSlideElement";
 import { TextButton } from "../../components/textButton/TextButton";
-import { renamePresentation } from "../../store/functions/renamePresentation";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider";
-import { updateBlockBgColor } from "../../store/functions/updateBlockBgColor";
-import { updateBlockBorderColor } from "../../store/functions/updateBlockBorderColor";
-import { updateFontColor } from "../../store/functions/updateFontColor";
-import { updateFontBgColor } from "../../store/functions/updateFontBgColor";
-import { updateFontName } from "../../store/functions/updateFontName";
-import { updateFontSize } from "../../store/functions/updateFontSize";
 import ImageButtonWithModal from "../../components/imageButton/ImageButtonWithModal";
 import ExportImageButton from "../../components/exportButton/ExportButton.tsx";
 import ImportButton from "../../components/importButton/ImportButton.tsx";
+import { useAppActions } from "../../hooks/useAppActions.ts";
 
 type TopPanelProps = {
   title: string;
@@ -33,6 +23,7 @@ type BasePanelProps = {
 };
 
 const BasePanel = ({ selection }: BasePanelProps) => {
+  const { removeSlide, addNewSlide, addSlideElem } = useAppActions();
   return (
     <>
       <ImportButton />
@@ -40,19 +31,17 @@ const BasePanel = ({ selection }: BasePanelProps) => {
 
       <ImageButton
         title="Удалить слайд"
-        onClick={() => dispatch(removeSlide, selection.selectedSlidesId as string[])}
+        onClick={() => removeSlide(selection.selectedSlidesId as string[])}
         imageName="delete"
       />
-      <ImageButton title="Новый слайд" onClick={() => dispatch(addNewSlide)} imageName="add" />
+      <ImageButton title="Новый слайд" onClick={() => addNewSlide} imageName="add" />
       <Separator />
       <ImageButton title="Отменить" onClick={() => console.log("undo")} imageName="undo" />
       <ImageButton title="Повторить" onClick={() => console.log("redo")} imageName="redo" />
       <Separator />
       <ImageButton
         title="Текстовое поле"
-        onClick={() =>
-          dispatch(addSlideElem, createTextObject({ x: 50, y: 50 }, { width: 100, height: 50 }, "New text"))
-        }
+        onClick={() => addSlideElem(createTextObject({ x: 50, y: 50 }, { width: 100, height: 50 }, "New text"))}
         imageName="text_fields"
       />
       <ImageButtonWithModal title="Вставить изображение" imageName="image" />
@@ -67,6 +56,7 @@ export type ImageEditPanelProps = {
 };
 
 const ImageEditPanel = ({ image, selection }: ImageEditPanelProps) => {
+  const { updateBlockBorderColor } = useAppActions();
   return (
     <>
       <EditColorButton
@@ -79,7 +69,7 @@ const ImageEditPanel = ({ image, selection }: ImageEditPanelProps) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
             const newColor = color;
-            dispatch(updateBlockBorderColor, { id, newColor });
+            updateBlockBorderColor(id, newColor);
           });
         }}
         onClick={() => {}}
@@ -94,6 +84,14 @@ export type TextEditPanelProps = {
 };
 
 const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
+  const {
+    updateBlockBorderColor,
+    updateBlockBgColor,
+    updateFontName,
+    updateFontSize,
+    updateFontColor,
+    updateFontBgColor,
+  } = useAppActions();
   return (
     <>
       <EditColorButton
@@ -106,7 +104,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
             const newColor = color;
-            dispatch(updateBlockBgColor, { id, newColor });
+            updateBlockBgColor(id, newColor);
           });
         }}
         onClick={() => {}}
@@ -121,7 +119,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
             const newColor = color;
-            dispatch(updateBlockBorderColor, { id, newColor });
+            updateBlockBorderColor(id, newColor);
           });
         }}
         onClick={() => {}}
@@ -131,7 +129,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
         onSelect={(value: string) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
-            dispatch(updateFontName, { id: id, newFontName: value });
+            updateFontName(id, value);
           });
         }}
         currentValue={text.fontName}
@@ -161,7 +159,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
         onChange={(newValue) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
-            dispatch(updateFontSize, { id: id, newFontSize: newValue });
+            updateFontSize(id, newValue);
           });
         }}
       />
@@ -197,8 +195,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
         onColorChange={(color: Color | Gradient) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
-            const newColor = color;
-            dispatch(updateFontColor, { id, newColor });
+            updateFontColor(id, color as string);
           });
         }}
         onClick={() => {}}
@@ -213,7 +210,7 @@ const TextEditPanel = ({ text, selection }: TextEditPanelProps) => {
           selection.selectedSlideObjectsId?.forEach((elem) => {
             const id = elem;
             const newColor = color;
-            dispatch(updateFontBgColor, { id, newColor });
+            updateFontBgColor(id, newColor as string);
           });
         }}
         onClick={() => {}}
@@ -262,8 +259,9 @@ const ChoosePanel = ({ currentElement, selection }: ChoosePanelProps) => {
 };
 
 const TopPanel = ({ title, selection }: TopPanelProps) => {
+  const { renamePresentation } = useAppActions();
   const onTitleChange: React.ChangeEventHandler = (event) => {
-    dispatch(renamePresentation, (event.target as HTMLInputElement).value);
+    renamePresentation((event.target as HTMLInputElement).value);
   };
 
   const { currentElement } = useAppContext();

@@ -1,12 +1,12 @@
-import { dispatch } from "../../store/editor";
-import { addNewSlide } from "../../store/functions/addSlide";
+import { useAppActions } from "../../hooks/useAppActions";
 import styles from "./NewSlideCreator.module.css";
 
 const NewSlideCreator = () => {
+  const { addNewSlide } = useAppActions();
   return (
     <div
       onClick={() => {
-        dispatch(addNewSlide);
+        addNewSlide;
       }}
       className={styles.newSlideCreator}
     >

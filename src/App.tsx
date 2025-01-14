@@ -2,17 +2,14 @@ import styles from "./App.module.css";
 import { SlidesList } from "./view/slidesList/SlidesList";
 import { TopPanel } from "./view/topPanel/TopPanel";
 import { Workspace } from "./view/workspace/Workspace";
-import { EditorType } from "./store/editorType";
 import { AppContextProvider } from "./contexts/appContext/AppContextProvider";
 import { useRef, useEffect } from "react";
-import { dispatch } from "./store/editor";
-import { setSelectionSlide } from "./store/functions/setSelectionSlide";
+import { useAppActions } from "./hooks/useAppActions";
+import { useAppSelector } from "./hooks/useAppSelector";
 
-type AppProps = {
-  editor: EditorType;
-};
-
-const App = ({ editor }: AppProps) => {
+const App = () => {
+  const editor = useAppSelector((state) => state);
+  const { setSelectionSlide } = useAppActions();
   const activeSlide = editor.presentation.slideCollection.find((slide) =>
     editor.selection.selectedSlidesId!.includes(slide.id),
   );
@@ -24,7 +21,7 @@ const App = ({ editor }: AppProps) => {
       if (containerRef.current && event.target === containerRef.current) {
         let newSel = editor.selection;
         newSel.selectedSlideObjectsId = [];
-        dispatch(setSelectionSlide, newSel);
+        setSelectionSlide(newSel);
       }
     };
 

@@ -6,11 +6,8 @@ import styles from "../slide/Slide.module.css";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { SelectionType } from "../../types/Selection.ts";
 import Selector from "../../components/selector/selector.tsx";
-import { dispatch } from "../../store/editor.ts";
-import { updatePosition } from "../../store/functions/updatePosition.ts";
-import { setSelectionSlide } from "../../store/functions/setSelectionSlide.ts";
-import { updateSize } from "../../store/functions/updateSize.ts";
 import { useAppContext } from "../../contexts/appContext/AppContextProvider.tsx";
+import { useAppActions } from "../../hooks/useAppActions.ts";
 
 const ASPECT_RATIO: number = 1000 / 562.5;
 
@@ -25,6 +22,7 @@ type SlideProps = {
 };
 
 const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlideProps) => {
+  const { updatePosition, updateSize, setSelectionSlide } = useAppActions();
   const slideStyles: CSSProperties = {
     width: `${SLIDE_WIDTH * scale}px`,
     height: `${(SLIDE_WIDTH / ASPECT_RATIO) * scale}px`,
@@ -52,20 +50,20 @@ const Slide = ({ containerRef, slide, scale = 1, className, selection }: SlidePr
   useEffect(() => {
     if (Object.keys(positions).length > 0) {
       Object.keys(positions).forEach((id) => {
-        dispatch(updatePosition, { id, pos: positions[id] });
+        updatePosition(id, positions[id]);
       });
     }
 
     if (Object.keys(sizes).length > 0) {
       Object.keys(sizes).forEach((id) => {
-        dispatch(updateSize, { id, size: sizes[id] });
+        updateSize(id, sizes[id]);
       });
     }
   }, [positions, sizes]);
 
   const handleContainerClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
-      dispatch(setSelectionSlide, {
+      setSelectionSlide({
         ...selection,
         selectedSlideObjectsId: [],
       });
