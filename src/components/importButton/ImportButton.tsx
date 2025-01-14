@@ -6,11 +6,7 @@ import schema from "../../schemasAJV/schema.json";
 const ajv = new AJV();
 const validate = ajv.compile(schema);
 
-export type ImportImageButtonProps = {
-  onImport: (data: any) => void;
-};
-
-const ImportImageButton = ({ onImport }: ImportImageButtonProps) => {
+const ImportImageButton = () => {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +28,11 @@ const ImportImageButton = ({ onImport }: ImportImageButtonProps) => {
           console.log(validate.errors);
           return;
         }
-        onImport(data);
+
+        localStorage.setItem("editorState", JSON.stringify(data));
+
+        // Поставил пока рефреш страницы, чтобы обновить все что есть
+        window.location.reload();
       } catch (error) {
         alert("Ошибка импорта: " + (error as Error).message);
       }

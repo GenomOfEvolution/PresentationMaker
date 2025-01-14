@@ -208,7 +208,6 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
   const { setCurrentElement } = useAppContext();
 
   const handleOnClick = () => {
-    console.log("Deleting selected elements:", selectedObjectsId);
     setCurrentElement(null);
     let newSel: SelectionType = selection;
     newSel.selectedSlideObjectsId = [];
@@ -217,7 +216,6 @@ const Selector = ({ selection, objects, containerRef, slideRef, onUpdatePosition
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Delete") {
-      console.log("Deleting selected elements:", selectedObjectsId);
       dispatch(removeSlideElem, { ...selection, selectedObjectsId: selectedObjectsId });
       setCurrentElement(null);
       let newSel: SelectionType = selection;

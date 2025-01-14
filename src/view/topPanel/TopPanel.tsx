@@ -32,15 +32,10 @@ type BasePanelProps = {
   selection: SelectionType;
 };
 
-const handleImport = (data: any) => {
-  localStorage.setItem("editorState", JSON.stringify(data));
-  alert("Документ импортирован.");
-};
-
 const BasePanel = ({ selection }: BasePanelProps) => {
   return (
     <>
-      <ImportButton onImport={handleImport} />
+      <ImportButton />
       <ExportImageButton />
 
       <ImageButton
