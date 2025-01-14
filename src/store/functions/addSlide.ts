@@ -4,7 +4,6 @@ import { addSlide, moveSlides } from "../../types/SlideCollection";
 import { EditorType } from "../editorType";
 
 const addNewSlide = (editor: EditorType): EditorType => {
-  console.log("addNewSlide");
   const newSlide: SlideType = createSlide();
   let curSelection: SelectionType = editor.selection;
 

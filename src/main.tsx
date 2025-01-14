@@ -8,6 +8,10 @@ import { StrictMode } from "react";
 
 const root = createRoot(document.getElementById("root")!);
 
+export type AppProps = {
+  history: HistoryType;
+};
+
 const render = () => {
   root.render(
     <StrictMode>

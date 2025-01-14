@@ -6,8 +6,14 @@ import { AppContextProvider } from "./contexts/appContext/AppContextProvider";
 import { useRef, useEffect } from "react";
 import { useAppActions } from "./hooks/useAppActions";
 import { useAppSelector } from "./hooks/useAppSelector";
+import { HistoryType } from "./utils/history";
+import { HistoryContext } from "./hooks/historyContext.ts";
 
-const App = () => {
+export type AppProps = {
+  history: HistoryType;
+};
+
+const App = ({ history }: AppProps) => {
   const editor = useAppSelector((state) => state);
   const { setSelectionSlide } = useAppActions();
   const activeSlide = editor.presentation.slideCollection.find((slide) =>
@@ -39,15 +45,17 @@ const App = () => {
 
   return (
     <>
-      <AppContextProvider>
-        <TopPanel title={editor.presentation.name} selection={editor.selection} />
-        <div className={styles.container}>
-          <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
-          <div className={styles.workspace__wrapper} ref={containerRef}>
-            <Workspace containerRef={containerRef} selection={editor.selection} slide={activeSlide!} />
+      <HistoryContext.Provider value={history}>
+        <AppContextProvider>
+          <TopPanel title={editor.presentation.name} selection={editor.selection} />
+          <div className={styles.container}>
+            <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
+            <div className={styles.workspace__wrapper} ref={containerRef}>
+              <Workspace containerRef={containerRef} selection={editor.selection} slide={activeSlide!} />
+            </div>
           </div>
-        </div>
-      </AppContextProvider>
+        </AppContextProvider>
+      </HistoryContext.Provider>
     </>
   );
 };

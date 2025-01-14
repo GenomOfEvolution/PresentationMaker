@@ -12,6 +12,8 @@ import ImageButtonWithModal from "../../components/imageButton/ImageButtonWithMo
 import ExportImageButton from "../../components/exportButton/ExportButton.tsx";
 import ImportButton from "../../components/importButton/ImportButton.tsx";
 import { useAppActions } from "../../hooks/useAppActions.ts";
+import { HistoryContext } from "../../contexts/historyContext/historyContext.ts";
+import React, { useContext } from "react";
 
 type TopPanelProps = {
   title: string;
@@ -23,7 +25,8 @@ type BasePanelProps = {
 };
 
 const BasePanel = ({ selection }: BasePanelProps) => {
-  const { removeSlide, addNewSlide, addSlideElem } = useAppActions();
+  const history = useContext(HistoryContext);
+  const { removeSlide, addNewSlide, addSlideElem, setEditor } = useAppActions();
   return (
     <>
       <ImportButton />
@@ -34,10 +37,28 @@ const BasePanel = ({ selection }: BasePanelProps) => {
         onClick={() => removeSlide(selection.selectedSlidesId as string[])}
         imageName="delete"
       />
-      <ImageButton title="Новый слайд" onClick={() => addNewSlide} imageName="add" />
+      <ImageButton title="Новый слайд" onClick={addNewSlide} imageName="add" />
       <Separator />
-      <ImageButton title="Отменить" onClick={() => console.log("undo")} imageName="undo" />
-      <ImageButton title="Повторить" onClick={() => console.log("redo")} imageName="redo" />
+      <ImageButton
+        title="Отменить"
+        onClick={() => {
+          const newEditor = history.undo();
+          if (newEditor) {
+            setEditor(newEditor);
+          }
+        }}
+        imageName="undo"
+      />
+      <ImageButton
+        title="Повторить"
+        onClick={() => {
+          const newEditor = history.redo();
+          if (newEditor) {
+            setEditor(newEditor);
+          }
+        }}
+        imageName="redo"
+      />
       <Separator />
       <ImageButton
         title="Текстовое поле"

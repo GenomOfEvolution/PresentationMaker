@@ -6,7 +6,7 @@ const NewSlideCreator = () => {
   return (
     <div
       onClick={() => {
-        addNewSlide;
+        addNewSlide();
       }}
       className={styles.newSlideCreator}
     >
