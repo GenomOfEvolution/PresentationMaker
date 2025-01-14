@@ -1,8 +1,7 @@
 import { useState } from "react";
 import AJV from "ajv";
 import { ImageButton } from "../imageButton/ImageButton";
-
-const schema = {};
+import schema from "../../schemasAJV/schema.json";
 
 const ajv = new AJV();
 const validate = ajv.compile(schema);

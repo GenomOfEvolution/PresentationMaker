@@ -4,6 +4,8 @@ import { createSelection, SelectionType } from "../types/Selection";
 import { addElement, createBgColor, createBgImage, createSlide, editBackground, SlideType } from "../types/Slide";
 import { addSlide } from "../types/SlideCollection";
 import { EditorType } from "./editorType";
+import AJV from "ajv";
+import schema from "../schemasAJV/schema.json";
 
 let presentation: Presentation = createPresentation();
 const selection: SelectionType = createSelection();
@@ -53,13 +55,42 @@ for (let i = 0; i < 5; i++) {
 
 selection.selectedSlidesId = [presentation.slideCollection[0].id];
 
-const savedEditorState = localStorage.getItem("editorState");
-const editor: EditorType = savedEditorState
-  ? JSON.parse(savedEditorState)
-  : {
-      presentation,
-      selection: selection,
-      workingWith: "workspace",
-    };
+const ajv = new AJV();
+const validate = ajv.compile(schema);
+
+const validateEditorData = (data: any): boolean => {
+  const isValid = validate(data);
+  if (!isValid) {
+    console.warn("Ошибки валидации:", validate.errors);
+  }
+  return isValid;
+};
+
+const loadStateFromLocalStorage = (): EditorType => {
+  let defaultEditor: EditorType = {
+    presentation: createPresentation(),
+    workingWith: "slideList",
+    selection: createSelection(),
+  };
+
+  try {
+    const serializedState = localStorage.getItem("editorState");
+    if (!serializedState) return defaultEditor;
+
+    const parsedState = JSON.parse(serializedState);
+
+    if (!validateEditorData(parsedState)) {
+      console.warn("Некорректные данные в localStorage. Загружается состояние по умолчанию.");
+      return defaultEditor;
+    }
+
+    return parsedState as EditorType;
+  } catch (err) {
+    console.error("Ошибка загрузки состояния из localStorage", err);
+    return defaultEditor;
+  }
+};
+
+const editor: EditorType = loadStateFromLocalStorage();
 
 export { editor };

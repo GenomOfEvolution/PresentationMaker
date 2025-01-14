@@ -1,0 +1,177 @@
+{
+  "definitions": {
+    "BackgroundType": {
+      "enum": [0, 1]
+    },
+    "BackgroundImg": {
+      "type": "object",
+      "properties": {
+        "type": { "const": 0 },
+        "url": { "type": "string" }
+      },
+      "required": ["type", "url"]
+    },
+    "BackgroundColor": {
+      "type": "object",
+      "properties": {
+        "type": { "const": 1 },
+        "color": { "$ref": "#/definitions/ColorOrGradient" }
+      },
+      "required": ["type", "color"]
+    },
+    "SlideBackground": {
+      "oneOf": [{ "$ref": "#/definitions/BackgroundImg" }, { "$ref": "#/definitions/BackgroundColor" }]
+    },
+    "SlideElement": {
+      "oneOf": [{ "$ref": "#/definitions/Text" }, { "$ref": "#/definitions/Image" }]
+    },
+    "SlideType": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "elements": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/SlideElement" }
+        },
+        "bg": { "$ref": "#/definitions/SlideBackground" }
+      },
+      "required": ["id", "elements", "bg"]
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Color": {
+      "type": "string"
+    },
+    "Point": {
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "required": ["x", "y"]
+    },
+    "Size": {
+      "type": "object",
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      },
+      "required": ["width", "height"]
+    },
+    "ObjectType": {
+      "enum": [0, 1]
+    },
+    "GradientType": {
+      "enum": [0, 1]
+    },
+    "RadialDirections": {
+      "enum": [0, 1, 2, 3, 4]
+    },
+    "GradientBase": {
+      "type": "object",
+      "properties": {
+        "gradientType": { "$ref": "#/definitions/GradientType" },
+        "colors": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Color" }
+        }
+      },
+      "required": ["gradientType", "colors"]
+    },
+    "LinearGradient": {
+      "allOf": [
+        { "$ref": "#/definitions/GradientBase" },
+        {
+          "properties": {
+            "gradientType": { "const": 0 },
+            "linearDegrees": { "type": "number" }
+          },
+          "required": ["gradientType", "linearDegrees"]
+        }
+      ]
+    },
+    "RadialGradient": {
+      "allOf": [
+        { "$ref": "#/definitions/GradientBase" },
+        {
+          "properties": {
+            "gradientType": { "const": 1 },
+            "radialCenter": { "$ref": "#/definitions/RadialDirections" }
+          },
+          "required": ["gradientType", "radialCenter"]
+        }
+      ]
+    },
+    "Gradient": {
+      "oneOf": [{ "$ref": "#/definitions/LinearGradient" }, { "$ref": "#/definitions/RadialGradient" }]
+    },
+    "ColorOrGradient": {
+      "oneOf": [{ "$ref": "#/definitions/Color" }, { "$ref": "#/definitions/Gradient" }]
+    },
+    "SlideObject": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/definitions/Id" },
+        "pos": { "$ref": "#/definitions/Point" },
+        "size": { "$ref": "#/definitions/Size" },
+        "objectType": { "$ref": "#/definitions/ObjectType" },
+        "blockBgColor": { "$ref": "#/definitions/ColorOrGradient" },
+        "blockBorderColor": { "$ref": "#/definitions/ColorOrGradient" }
+      },
+      "required": ["id", "pos", "size", "objectType", "blockBgColor", "blockBorderColor"]
+    },
+    "FontFormatting": {
+      "enum": [0, 1, 2, 3]
+    },
+    "Text": {
+      "allOf": [
+        { "$ref": "#/definitions/SlideObject" },
+        {
+          "properties": {
+            "objectType": { "const": 0 },
+            "fontSize": { "type": "number" },
+            "fontName": { "type": "string" },
+            "fontFormatting": { "$ref": "#/definitions/FontFormatting" },
+            "fontColor": { "$ref": "#/definitions/Color" },
+            "fontBgColor": { "$ref": "#/definitions/Color" },
+            "content": { "type": ["string", "null"] }
+          },
+          "required": ["objectType", "fontSize", "fontName", "fontFormatting", "fontColor", "fontBgColor", "content"]
+        }
+      ]
+    },
+    "ImageSource": {
+      "enum": ["URL", "Base64"]
+    },
+    "Image": {
+      "allOf": [
+        { "$ref": "#/definitions/SlideObject" },
+        {
+          "properties": {
+            "objectType": { "const": 1 },
+            "url": { "type": "string" },
+            "source": { "$ref": "#/definitions/ImageSource" }
+          },
+          "required": ["objectType", "url", "source"]
+        }
+      ]
+    },
+    "Presentation": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slideCollection": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/SlideType" }
+        }
+      },
+      "required": ["name", "slideCollection"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "presentation": { "$ref": "#/definitions/Presentation" }
+  },
+  "required": ["presentation"]
+}
