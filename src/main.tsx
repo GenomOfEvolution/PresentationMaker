@@ -1,26 +1,17 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { addEditorChangeHandler } from "./store/editor.ts";
 import { Provider } from "react-redux";
 import { store } from "./store/redux/store.ts";
 import { StrictMode } from "react";
+import { initHistory } from "./utils/history.ts";
 
 const root = createRoot(document.getElementById("root")!);
 
-export type AppProps = {
-  history: HistoryType;
-};
-
-const render = () => {
-  root.render(
-    <StrictMode>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </StrictMode>,
-  );
-};
-
-addEditorChangeHandler(render);
-render();
+root.render(
+  <StrictMode>
+    <Provider store={store}>
+      <App history={initHistory(store)} />
+    </Provider>
+  </StrictMode>,
+);

@@ -83,6 +83,7 @@
       "allOf": [
         { "$ref": "#/definitions/GradientBase" },
         {
+          "type": "object",
           "properties": {
             "gradientType": { "const": 0 },
             "linearDegrees": { "type": "number" }
@@ -95,6 +96,7 @@
       "allOf": [
         { "$ref": "#/definitions/GradientBase" },
         {
+          "type": "object",
           "properties": {
             "gradientType": { "const": 1 },
             "radialCenter": { "$ref": "#/definitions/RadialDirections" }
@@ -128,6 +130,7 @@
       "allOf": [
         { "$ref": "#/definitions/SlideObject" },
         {
+          "type": "object",
           "properties": {
             "objectType": { "const": 0 },
             "fontSize": { "type": "number" },
@@ -148,6 +151,7 @@
       "allOf": [
         { "$ref": "#/definitions/SlideObject" },
         {
+          "type": "object",
           "properties": {
             "objectType": { "const": 1 },
             "url": { "type": "string" },

@@ -14,6 +14,8 @@ import ImportButton from "../../components/importButton/ImportButton.tsx";
 import { useAppActions } from "../../hooks/useAppActions.ts";
 import { HistoryContext } from "../../contexts/historyContext/historyContext.ts";
 import React, { useContext } from "react";
+import exportPdf from "../../store/functions/exportPDF.ts";
+import { useAppSelector } from "../../hooks/useAppSelector.ts";
 
 type TopPanelProps = {
   title: string;
@@ -25,10 +27,28 @@ type BasePanelProps = {
 };
 
 const BasePanel = ({ selection }: BasePanelProps) => {
-  const history = useContext(HistoryContext);
   const { removeSlide, addNewSlide, addSlideElem, setEditor } = useAppActions();
+  const history = useContext(HistoryContext);
+
+  function onUndo() {
+    const newEditor = history.undo();
+    if (newEditor) {
+      setEditor(newEditor);
+    }
+  }
+
+  function onRedo() {
+    const newEditor = history.redo();
+    if (newEditor) {
+      setEditor(newEditor);
+    }
+  }
+
+  const editor = useAppSelector((editor) => editor);
+
   return (
     <>
+      <ImageButton title="Экспорт в PDF" onClick={() => exportPdf(editor.presentation)} imageName="picture_as_pdf" />
       <ImportButton />
       <ExportImageButton />
 
@@ -39,26 +59,8 @@ const BasePanel = ({ selection }: BasePanelProps) => {
       />
       <ImageButton title="Новый слайд" onClick={addNewSlide} imageName="add" />
       <Separator />
-      <ImageButton
-        title="Отменить"
-        onClick={() => {
-          const newEditor = history.undo();
-          if (newEditor) {
-            setEditor(newEditor);
-          }
-        }}
-        imageName="undo"
-      />
-      <ImageButton
-        title="Повторить"
-        onClick={() => {
-          const newEditor = history.redo();
-          if (newEditor) {
-            setEditor(newEditor);
-          }
-        }}
-        imageName="redo"
-      />
+      <ImageButton title="Отменить" onClick={onUndo} imageName="undo" />
+      <ImageButton title="Повторить" onClick={onRedo} imageName="redo" />
       <Separator />
       <ImageButton
         title="Текстовое поле"

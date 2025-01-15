@@ -3,7 +3,7 @@ import { SlidesList } from "./view/slidesList/SlidesList";
 import { TopPanel } from "./view/topPanel/TopPanel";
 import { Workspace } from "./view/workspace/Workspace";
 import { AppContextProvider } from "./contexts/appContext/AppContextProvider";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
 import { useAppActions } from "./hooks/useAppActions";
 import { useAppSelector } from "./hooks/useAppSelector";
 import { HistoryType } from "./utils/history";
@@ -16,6 +16,7 @@ export type AppProps = {
 const App = ({ history }: AppProps) => {
   const editor = useAppSelector((state) => state);
   const { setSelectionSlide } = useAppActions();
+
   const activeSlide = editor.presentation.slideCollection.find((slide) =>
     editor.selection.selectedSlidesId!.includes(slide.id),
   );
@@ -43,20 +44,23 @@ const App = ({ history }: AppProps) => {
     };
   }, []);
 
+  console.log("App", history);
+
+  const aaaa = useContext(HistoryContext);
+  console.log("AAAA", aaaa);
+
   return (
-    <>
+    <AppContextProvider>
       <HistoryContext.Provider value={history}>
-        <AppContextProvider>
-          <TopPanel title={editor.presentation.name} selection={editor.selection} />
-          <div className={styles.container}>
-            <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
-            <div className={styles.workspace__wrapper} ref={containerRef}>
-              <Workspace containerRef={containerRef} selection={editor.selection} slide={activeSlide!} />
-            </div>
+        <TopPanel title={editor.presentation.name} selection={editor.selection} />
+        <div className={styles.container}>
+          <SlidesList slides={editor.presentation.slideCollection} selection={editor.selection} />
+          <div className={styles.workspace__wrapper} ref={containerRef}>
+            <Workspace containerRef={containerRef} selection={editor.selection} slide={activeSlide!} />
           </div>
-        </AppContextProvider>
+        </div>
       </HistoryContext.Provider>
-    </>
+    </AppContextProvider>
   );
 };
 

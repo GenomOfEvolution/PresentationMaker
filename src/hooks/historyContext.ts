@@ -6,4 +6,5 @@ const defaultHistory: HistoryType = {
   redo: () => undefined,
 };
 const HistoryContext: React.Context<HistoryType> = React.createContext(defaultHistory);
+
 export { HistoryContext };

@@ -5,15 +5,19 @@ type HistoryType = {
   undo: () => EditorType | undefined;
   redo: () => EditorType | undefined;
 };
+
 function getLastItem(stack: Array<EditorType>): EditorType {
   return stack[stack.length - 1];
 }
-function initHistory(store: Store<EditorType>): HistoryType {
+
+const initHistory = (store: Store<EditorType>): HistoryType => {
   const undoStack: Array<EditorType> = [];
   let redoStack: Array<EditorType> = [];
   let previousEditor = store.getState();
+
   store.subscribe(() => {
     const editor = store.getState();
+
     if (!undoStack.length || previousEditor.presentation != editor.presentation) {
       if (editor == getLastItem(undoStack)) {
         undoStack.pop();
@@ -30,17 +34,14 @@ function initHistory(store: Store<EditorType>): HistoryType {
   });
 
   function undo() {
-    console.log("UNDO");
     return getLastItem(undoStack);
   }
 
   function redo() {
-    console.log("REDO");
     return getLastItem(redoStack);
   }
-  return {
-    undo,
-    redo,
-  };
-}
+
+  return { undo, redo };
+};
+
 export { type HistoryType, initHistory };
